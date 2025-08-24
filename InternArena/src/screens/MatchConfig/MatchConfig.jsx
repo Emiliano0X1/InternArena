@@ -1,7 +1,18 @@
 import { FaLongArrowAltLeft } from "react-icons/fa";
 import Players from "./components/Players";
+import { useState } from "react";
+import Popup from "./components/Popup";
 
 function MatchConfig() {
+    //Difficulty
+    //Time
+    //Prize
+    //Topics
+    const [showDiff, setShowDiff] = useState(false);
+    const [showTime, setShowTime] = useState(false);
+    const [showPrize, setShowPrize] = useState(false);
+    const [showTopic, setShowTopic] = useState(false);
+    
     return (
         <div className="fixed inset-0 w-full h-full bg-[#282424] overflow-y-auto text-xl text-white">
             <div className="flex items-center">
@@ -21,28 +32,95 @@ function MatchConfig() {
                     {/*Option Buttons*/}
                     <div className="grid grid-cols-2 gap-6 p-4 justify-items-center">
                         {/*Difficulty*/}
-                        <button className="w-40 rounded-xl bg-[#383434] py-6">
+                        <button
+                            className="w-40 rounded-xl bg-[#383434] py-6 hover:bg-[#4a4545] transition-colors duration-200"
+                            onClick={() => setShowDiff(true)}
+                        >
                             Difficulty
                         </button>
 
+                        {/* Render del Popup */}
+                        {showDiff && (
+                            <Popup title="Choose Difficulty" onClose={() => setShowDiff(false)}>
+                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
+                                Easy
+                            </button>
+                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
+                                Medium
+                            </button>
+                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
+                                Hard
+                            </button>
+                            </Popup>
+                        )}
+
                         {/*Time*/}
-                        <button className="w-40 rounded-xl bg-[#383434] py-6">
+                        <button
+                            className="w-40 rounded-xl bg-[#383434] py-6 hover:bg-[#4a4545] transition-colors duration-200"
+                            onClick={() => setShowTime(true)}
+                        >
                             Time
                         </button>
 
+                        {/* Render del Popup */}
+                        {showTime && (
+                            <Popup title="Choose Time" onClose={() => setShowTime(false)}>
+                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
+                                3 hours
+                            </button>
+                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
+                                6 hours
+                            </button>
+                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
+                                12 hours
+                            </button>
+                            </Popup>
+                        )}
+
                         {/*Prize*/}
-                        <button className="w-40 rounded-xl bg-[#383434] py-6">
+                        <button
+                            className="w-40 rounded-xl bg-[#383434] py-6 hover:bg-[#4a4545] transition-colors duration-200"
+                            onClick={() => setShowPrize(true)}
+                        >
                             Prize
                         </button>
 
+                        {/* Render del Popup */}
+                        {showPrize && (
+                            <Popup title="Choose Difficulty" onClose={() => setShowPrize(false)}>
+                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
+                                $$$
+                            </button>
+                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
+                                Coupon
+                            </button>
+                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
+                                Meow
+                            </button>
+                            </Popup>
+                        )}
+
                         {/*Topics*/}
-                        <button className="w-40 rounded-xl bg-[#383434] py-6">
+                        <button
+                            className="w-40 rounded-xl bg-[#383434] py-6 hover:bg-[#4a4545] transition-colors duration-200"
+                            onClick={() => setShowTopic(true)}
+                        >
                             Topics
                         </button>
+
+                        {/* Render del Popup */}
+                        {showTopic && (
+                            <Popup title="Choose Difficulty" onClose={() => setShowTopic(false)}>
+                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
+                                Coming Soon?
+                            </button>
+                            </Popup>
+                        )}
                     </div>
 
                     <div className="flex justify-center">
-                        <button className="rounded-xl bg-orange-500 px-8 py-4 mt-6">
+                        <button className="rounded-xl bg-orange-500 px-8 py-4 mt-6
+                        hover:bg-orange-400 transition-colors duration-200">
                             Create Match
                         </button>
                     </div>
