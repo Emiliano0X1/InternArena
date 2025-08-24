@@ -42,13 +42,14 @@ function Header() {
                         </button>
                     </Popup>
                 )}
-                
+
                 {/*Boton para ver perfil */}
                 <button className='text-2xl h-fit w-fit 
                 flex items-center justify-center whitespace-nowrap 
-                mr-4 rounded-sm border p-1'>
-                    <img src={joeswag} alt="Profile picture" className='h-8 w-8'/>
-                    <p>Flavio Gonsales</p>
+                mr-4 rounded-sm border p-1'
+                onClick={() => navigate("/login")}
+                >
+                    <p>Log In / Register</p>
                 </button>
             </div>
         </div>
