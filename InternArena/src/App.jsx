@@ -5,12 +5,6 @@ import MatchConfig from "./screens/MatchConfig/MatchConfig"
 function App() {
   return (
     <div>
-      {/* Menú de navegación */}
-      <nav style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
-        <Link to="/">Landing</Link>
-        <Link to="/match">Match Config</Link>
-      </nav>
-
       {/* Rutas */}
       <Routes>
         <Route path="/" element={<LandingPage />} />

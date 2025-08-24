@@ -46,13 +46,13 @@ function MatchConfig() {
                         {/* Render del Popup */}
                         {showDiff && (
                             <Popup title="Choose Difficulty" onClose={() => setShowDiff(false)}>
-                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
+                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500 transition-colors duration-200">
                                 Easy
                             </button>
-                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
+                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500 transition-colors duration-200">
                                 Medium
                             </button>
-                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
+                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500 transition-colors duration-200">
                                 Hard
                             </button>
                             </Popup>
@@ -70,7 +70,7 @@ function MatchConfig() {
                         {showTime && (
                             <Popup title="Choose Time" onClose={() => setShowTime(false)}>
                             <input type="datetime-local" placeholder="Select date and time"/>
-                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
+                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500 transition-colors duration-200">
                                 Submit
                             </button>
                             
@@ -89,7 +89,7 @@ function MatchConfig() {
                         {showPrize && (
                             <Popup title="Choose Prize" onClose={() => setShowPrize(false)}>
                             <input type="text" placeholder="Cool prize for winner" className="border rounded-xl p-2"/>
-                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
+                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500 transition-colors duration-200">
                                 Submit
                             </button>
                             </Popup>
@@ -106,7 +106,7 @@ function MatchConfig() {
                         {/* Render del Popup */}
                         {showTopic && (
                             <Popup title="Choose Topics" onClose={() => setShowTopic(false)}>
-                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
+                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500 transition-colors duration-200">
                                 Coming Soon?
                             </button>
                             </Popup>
