@@ -1,5 +1,5 @@
 import PostHeader from "./PostHeader"
-import postimage from '../assets/profilebanner.png'
+import postimage from '../../../assets/profilebanner.png'
 
 function Post() {
     

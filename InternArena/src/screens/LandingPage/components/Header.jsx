@@ -1,4 +1,4 @@
-import joeswag from '../assets/joeswag.png';
+import joeswag from '../../../assets/joeswag.png';
 
 function Header() {
     return(

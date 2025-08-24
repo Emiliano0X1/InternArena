@@ -1,5 +1,4 @@
 
-
 function Ranking() {
     return(
         <div className="flex items-center whitespace-nowrap my-4">

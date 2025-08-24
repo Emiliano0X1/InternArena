@@ -1,6 +1,6 @@
-import profilebanner from '../assets/profilebanner.png'
-import joeswag from '../assets/joeswag.png'
-import leetcode from '..//assets/leetcode.png'
+import profilebanner from '../../../assets/profilebanner.png'
+import joeswag from '../../../assets/joeswag.png'
+import leetcode from '../../../assets/leetcode.png'
 import { LiaMedalSolid } from "react-icons/lia";
 import { LuCoins } from "react-icons/lu";
 
