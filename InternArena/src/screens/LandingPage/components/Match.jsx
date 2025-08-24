@@ -1,5 +1,10 @@
 
+import { useNavigate } from "react-router-dom"
+
 function Match() {
+
+    const navigate = useNavigate();
+
     return(
         <div className="bg-[#282424] h-full my-4 rounded-xl p-4 text-xl">
             
@@ -23,7 +28,9 @@ function Match() {
             </div>
 
             <div className="flex justify-end">
-                <button className="bg-orange-500 rounded-xl p-2">
+                <button className="bg-orange-500 rounded-xl p-2"
+                onClick={() => navigate('/matchpage')}
+                >
                     GO
                 </button>
             </div>
