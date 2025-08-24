@@ -1,9 +1,11 @@
 import { FaLongArrowAltLeft } from "react-icons/fa";
 import Players from "./components/Players";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Popup from "./components/Popup";
 
 function MatchConfig() {
+    const navigate = useNavigate();
     //Difficulty
     //Time
     //Prize
@@ -16,11 +18,13 @@ function MatchConfig() {
     return (
         <div className="fixed inset-0 w-full h-full bg-[#282424] overflow-y-auto text-xl text-white">
             <div className="flex items-center">
-                <button className="mx-4">
+                <button 
+                onClick={() => navigate("/")}
+                className="mx-4 border-white">
                     <FaLongArrowAltLeft color="gray" className="h-40 w-40" />
                 </button>
 
-                <p className="mx-4">Invitation Link : https://www.linkedin.com/feed/ </p>
+                <p className="mx-4">Invitation Code : https://www.linkedin.com/feed/ </p>
             </div>
 
             {/* Contenedor principal en fila */}
