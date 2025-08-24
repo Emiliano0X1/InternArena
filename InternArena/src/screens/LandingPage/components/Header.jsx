@@ -36,7 +36,7 @@ function Header() {
                 </button>
 
                 {showShop && (
-                    <Popup title="Choose Difficulty" onClose={() => setShowShop(false)}>
+                    <Popup title="" onClose={() => setShowShop(false)}>
                         <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
                             Coming Soon?
                         </button>

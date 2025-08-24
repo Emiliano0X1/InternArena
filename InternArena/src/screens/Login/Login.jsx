@@ -54,6 +54,14 @@ function Login() {
                             >
                                 Register
                             </button>
+
+                            <button 
+                                className="rounded-xl bg-gray-600 px-8 py-4 
+                                hover:bg-gray-500 transition-colors duration-200"
+                                onClick={() => navigate('/')}
+                            >
+                                Return
+                            </button>
                         </div>
                     </div>
                 </div>
