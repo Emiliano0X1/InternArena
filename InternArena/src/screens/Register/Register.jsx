@@ -32,11 +32,32 @@ function Register() {
                             Put in an email which hasnt been synced to an existing account
                         </p>
 
-                        <input 
+                        <label className='px-4'>
+                            Email:
+                            <input 
                             type="text" 
                             placeholder="examplemail@domain.com" 
                             className="w-full p-4 rounded-md text-white"
                         />
+                        </label>
+
+                        <label className='px-4'>
+                            Password:
+                            <input 
+                            type="password" 
+                            placeholder="example123" 
+                            className="w-full p-4 rounded-md text-white"
+                        />
+                        </label>
+
+                        <label className='px-4'>
+                            Confirm Password
+                            <input 
+                            type="password" 
+                            placeholder="example123" 
+                            className="w-full p-4 rounded-md text-white"
+                        />
+                        </label>
 
                         <div className="flex flex-col items-center gap-4 mt-6">
                             <button 
