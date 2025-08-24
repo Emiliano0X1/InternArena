@@ -65,15 +65,11 @@ function MatchConfig() {
                         {/* Render del Popup */}
                         {showTime && (
                             <Popup title="Choose Time" onClose={() => setShowTime(false)}>
+                            <input type="datetime-local" placeholder="Select date and time"/>
                             <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
-                                3 hours
+                                Submit
                             </button>
-                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
-                                6 hours
-                            </button>
-                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
-                                12 hours
-                            </button>
+                            
                             </Popup>
                         )}
 
@@ -87,15 +83,10 @@ function MatchConfig() {
 
                         {/* Render del Popup */}
                         {showPrize && (
-                            <Popup title="Choose Difficulty" onClose={() => setShowPrize(false)}>
+                            <Popup title="Choose Prize" onClose={() => setShowPrize(false)}>
+                            <input type="text" placeholder="Cool prize for winner" className="border rounded-xl p-2"/>
                             <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
-                                $$$
-                            </button>
-                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
-                                Coupon
-                            </button>
-                            <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
-                                Meow
+                                Submit
                             </button>
                             </Popup>
                         )}
@@ -110,7 +101,7 @@ function MatchConfig() {
 
                         {/* Render del Popup */}
                         {showTopic && (
-                            <Popup title="Choose Difficulty" onClose={() => setShowTopic(false)}>
+                            <Popup title="Choose Topics" onClose={() => setShowTopic(false)}>
                             <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
                                 Coming Soon?
                             </button>
