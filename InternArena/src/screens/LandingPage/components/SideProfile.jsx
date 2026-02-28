@@ -3,19 +3,25 @@ import joeswag from '../../../assets/joeswag.png'
 import leetcode from '../../../assets/leetcode.png'
 import { LiaMedalSolid } from "react-icons/lia";
 import { LuCoins } from "react-icons/lu";
+import { motion } from 'motion/react'
 
 function SideProfile(){
     return(
-        <div className="w-xs mx-4 p-4 rounded-xl bg-[#383434] text-2xl text-white">
+        <motion.div 
+        initial={{ opacity: 0 }} 
+        animate={{ opacity: 1}} 
+        transition={{ duration: 1 }} 
+        className="w-xs mx-4 p-4 rounded-xl bg-[#383434] text-2xl text-white">
             <img src={profilebanner} alt="Profile Banner" className='w-fit h-fit relative'/>
             {/*Cambiar profile pic por cada usuario
             @Backend
+            Hermano realmente creyo q era d backend 😭😭
             */}
             <div className="flex justify-center">
                 <img
                     src={joeswag}
                     alt="Profile Picture"
-                    className="w-32 h-32 rounded-sm border-1 -mt-12 z-10 object-cover"
+                    className="w-32 h-32 rounded-sm -mt-12 z-10 object-cover"
                     style={{ position: 'relative', top: '-48px' }}
                 />
             </div>
@@ -44,7 +50,7 @@ function SideProfile(){
                 <p className='p-4'>Leetcoins:</p>
                 <p>12,345</p>
             </div>
-        </div>
+        </motion.div>
     )
 }
 

@@ -8,22 +8,24 @@ function LandingPage(){
 
     return (
         /*Si se quita este div nos morimos todos*/
-        <div className="fixed inset-0 w-full h-full bg-[#282424] overflow-y-auto text-white">
+        <div className="fixed inset-0 w-full h-full bg-[#282424] flex flex-col text-white overflow-hidden">
             <Header/>
-            <div className="flex">
+            <div className="flex flex-1 min-h-0 overflow-hidden">
                 {/*Side profile y rankings */}
-                <div>
+                <div className="overflow-y-auto scrollbar-hide min-w-0 shrink-0">
                     <SideProfile/>   
                     <RecentRankings/> 
                 </div>
                 {/*posts*/}
-                <div>
+                <div className="overflow-y-auto scrollbar-hide flex-1 min-w-0 min-h-0">
                     <Post/>
                     <Post/>
                     <Post/>
                 </div>
                 {/*partidas activas*/}
-                <div>
+                <div className="overflow-y-auto scrollbar-hide min-w-0 shrink-0">
+                    <ActiveMatches/>
+                    <ActiveMatches/>
                     <ActiveMatches/>
                 </div>
             </div>

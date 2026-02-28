@@ -7,22 +7,22 @@ import ActiveMatches from "./ActiveMatches"
 function Body(){
     return (
         /*Si se quita este div nos morimos todos*/
-        <div className="fixed inset-0 w-full h-full bg-[#282424] overflow-y-auto">
+        <div className="fixed inset-0 w-full h-full bg-[#282424] flex flex-col">
             <Header/>
-            <div className="flex">
+            <div className="flex flex-1 min-h-0">
                 {/*Side profile y rankings */}
-                <div>
+                <div className="overflow-y-auto min-w-0">
                     <SideProfile/>   
                     <RecentRankings/> 
                 </div>
                 {/*posts*/}
-                <div>
+                <div className="overflow-y-auto flex-1 min-w-0">
                     <Post/>
                     <Post/>
                     <Post/>
                 </div>
                 {/*partidas activas*/}
-                <div>
+                <div className="overflow-y-auto min-w-0">
                     <ActiveMatches/>
                 </div>
             </div>
