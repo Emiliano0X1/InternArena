@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Outfit font - applies to entire project */
+body {
+  font-family: 'Outfit', sans-serif;
+}
+
 /* Hide scrollbar but keep scroll functionality */
 .scrollbar-hide {
   -ms-overflow-style: none;
