@@ -4,6 +4,7 @@ import MatchConfig from "./screens/MatchConfig/MatchConfig"
 import Login from "./screens/Login/Login"
 import Register from "./screens/Register/Register"
 import MatchPage from "./screens/MatchPage/MatchPage";
+import StoreView from "./screens/Store/Store";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register/>} />
         <Route path="/matchpage" element={<MatchPage/>} />
+        <Route path="/store" element={<StoreView/>}/>
       </Routes>
     </div>
   );
