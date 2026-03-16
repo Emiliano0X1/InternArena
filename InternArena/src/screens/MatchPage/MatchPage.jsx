@@ -1,42 +1,50 @@
 import { FaLongArrowAltLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import LeetcodeSet from "./components/LeetcodeSet";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 function MatchPage() {
     const navigate = useNavigate();
     
     return (
-        <div className="fixed inset-0 w-full h-full bg-[#282424] overflow-y-auto text-xl text-white">
-            {/*Header type coso */}
-            <div className="flex items-center">
-                <button 
-                onClick={() => navigate("/")}
-                className="mx-4 border-white">
-                    <FaLongArrowAltLeft color="gray" className="h-40 w-40" />
-                </button>
+        <Box sx={{ height: "100vh", bgcolor: "background.default", color: "text.primary", overflow: "hidden" }}>
+            <Container maxWidth={false} sx={{ py: 2, height: "100%" }}>
+                <Paper sx={{ p: { xs: 1.5, md: 2 }, mb: 2 }}>
+                    <Stack direction="row" alignItems="center" spacing={1.5}>
+                        <Button
+                            variant="text"
+                            onClick={() => navigate("/")}
+                            startIcon={<FaLongArrowAltLeft />}
+                            sx={{ color: "text.secondary" }}
+                        >
+                            Back
+                        </Button>
 
-                <div className="flex-1 items-center justify-center">
-                    <p className="text-center text-7xl py-4">Match of Emiliano</p>
-                    <p className="text-center text-4xl">Time left: 00:14:23:09</p>
-                </div>
+                        <Box sx={{ flex: 1, textAlign: "center" }}>
+                            <Typography variant="h3" sx={{ fontWeight: 800, letterSpacing: -0.6 }}>
+                                Match of Emiliano
+                            </Typography>
+                            <Typography variant="h6" color="text.secondary">
+                                Time left: 00:14:23:09
+                            </Typography>
+                        </Box>
 
-                {/*Boton para ver perfil */}
-                <button className='text-2xl h-fit w-fit 
-                flex items-center justify-center whitespace-nowrap 
-                mr-4 rounded-sm border p-1'
-                onClick={() => navigate("/login")}
-                >
-                    <p>Log In / Register</p>
-                </button>
-            </div>
+                        <Button variant="contained" onClick={() => navigate("/login")}>
+                            Log In / Register
+                        </Button>
+                    </Stack>
+                </Paper>
 
-            {/*Leetcode Set */}
-            <div>
-                <LeetcodeSet/>
-            </div>
-
-
-        </div>    
+                <Paper sx={{ p: { xs: 2, md: 3 }, height: "calc(100% - 104px)", overflow: "auto" }}>
+                    <LeetcodeSet/>
+                </Paper>
+            </Container>
+        </Box>    
     );
 }
 

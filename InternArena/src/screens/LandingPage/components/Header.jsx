@@ -1,58 +1,48 @@
 import joeswag from '../../../assets/joeswag.png';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Popup from '../../../components/Popup';
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
 function Header() {
     const [showShop, setShowShop] = useState(false);
     const navigate = useNavigate();
 
     return(
-        <div className="h-fit w-full flex items-center justify-between px-8 py-4 sticky top-0 z-50 bg-[#282424] text-white">
-            {/*div para el logo y el intern arena*/}
-            <div className="flex justify-between">
-                <img src={joeswag} alt="Intern Arena Logo" className='h-16 w-16'/>
-                <h1 className='text-5xl'>Leet Arena</h1>
-            </div>
+        <AppBar position="sticky" color="transparent" elevation={0} sx={{ backdropFilter: "blur(10px)" }}>
+            <Toolbar sx={{ px: { xs: 2, md: 4 }, py: 1, gap: 2 }}>
+                <Stack direction="row" spacing={2} alignItems="center" sx={{ minWidth: 0 }}>
+                    <img src={joeswag} alt="Intern Arena Logo" style={{ width: 44, height: 44 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 700, letterSpacing: -0.5, whiteSpace: "nowrap" }}>
+                        Leet Arena
+                    </Typography>
+                </Stack>
 
-            {/*div para los botones y el perfil*/}
-            <div className='flex justify-between'>
-                {/*Boton para crear salas / lobbies*/} 
-                <button className='text-2xl h-fit w-fit 
-                flex items-center justify-center whitespace-nowrap 
-                mr-4 rounded-sm border p-1'
-                onClick={() => navigate("/match")}
-                    >
-                    Create Lobby
-                </button>
-
-                {/*Boton para tienda???? */}
-                <button className='text-2xl h-fit w-fit 
-                flex items-center justify-center whitespace-nowrap 
-                mr-4 rounded-sm border p-1'
-                onClick={() => setShowShop(true)}
-                >
-                    Shop
-                </button>
+                <Stack direction="row" spacing={1.5} sx={{ ml: "auto" }}>
+                    <Button variant="outlined" size="large" onClick={() => navigate("/match")}>
+                        Create Lobby
+                    </Button>
+                    <Button variant="outlined" size="large" onClick={() => setShowShop(true)}>
+                        Shop
+                    </Button>
+                    <Button variant="contained" size="large" onClick={() => navigate("/login")}>
+                        Log In / Register
+                    </Button>
+                </Stack>
 
                 {showShop && (
-                    <Popup title="" onClose={() => setShowShop(false)}>
-                        <button className="bg-gray-600 rounded-lg py-2 hover:bg-gray-500">
-                            Coming Soon?
-                        </button>
+                    <Popup title="Shop" onClose={() => setShowShop(false)}>
+                        <Button variant="outlined" onClick={() => setShowShop(false)}>
+                            Coming Soon
+                        </Button>
                     </Popup>
                 )}
-
-                {/*Boton para ver perfil */}
-                <button className='text-2xl h-fit w-fit 
-                flex items-center justify-center whitespace-nowrap 
-                mr-4 rounded-sm border p-1'
-                onClick={() => navigate("/login")}
-                >
-                    <p>Log In / Register</p>
-                </button>
-            </div>
-        </div>
+            </Toolbar>
+        </AppBar>
     )
 }
 

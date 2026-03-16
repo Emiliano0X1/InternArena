@@ -1,22 +1,25 @@
 
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+
 function Popup({ title, children, onClose }) {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-      <div className="bg-[#383434] p-8 rounded-2xl shadow-lg max-w-sm w-full text-center text-white">
-        {title && <h2 className="text-2xl mb-4">{title}</h2>}
-
-        <div className="flex flex-col gap-3">
+    <Dialog open onClose={onClose} fullWidth maxWidth="xs">
+      {title ? <DialogTitle>{title}</DialogTitle> : null}
+      <DialogContent dividers>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {children}
         </div>
-
-        <button
-          className="mt-6 bg-red-500 px-4 py-2 rounded-lg hover:bg-red-400 transition-colors duration-200"
-          onClick={onClose}
-        >
+      </DialogContent>
+      <DialogActions>
+        <Button color="error" variant="contained" onClick={onClose}>
           Close
-        </button>
-      </div>
-    </div>
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 
