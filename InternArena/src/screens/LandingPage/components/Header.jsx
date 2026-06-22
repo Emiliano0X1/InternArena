@@ -26,6 +26,9 @@ function Header() {
                     <Button variant="outlined" size="large" onClick={() => navigate("/match")}>
                         Create Lobby
                     </Button>
+                    <Button variant ="outlined" size = "large" onClick={() => navigate ("/join")}>
+                        Join Lobby
+                    </Button>
                     <Button variant="outlined" size="large" onClick={() => setShowShop(true)}>
                         Shop
                     </Button>
