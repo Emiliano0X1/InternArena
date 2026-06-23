@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, TextField, Typography } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 function JoinLobby() {
     const [code, setCode] = useState("");
@@ -12,23 +13,34 @@ function JoinLobby() {
             setError("Please enter a lobby code");
             return;
         }
-        // TODO: validar con backend que el código existe
+        // veriify with backend if the lobby exist
         console.log("Joining lobby:", code);
     };
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 10, gap: 2 }}>
-            <Typography variant="h4">Join a Lobby</Typography>
-            <TextField
-                label="Lobby Code"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                error={!!error}
-                helperText={error}
-            />
-            <Button variant="contained" size="large" onClick={handleJoin}>
-                Join
+        <Box sx={{ position: "relative", mt: 10 }}>
+            <Button
+                variant="outlined"
+                startIcon={<ArrowBackIcon />}
+                onClick={() => navigate(-1)}
+                sx={{ position: "absolute", top: -60, left: 24 }}
+            >
+                Back
             </Button>
+
+            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+                <Typography variant="h4">Join a Lobby</Typography>
+                <TextField
+                    label="Lobby Code"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    error={!!error}
+                    helperText={error}
+                />
+                <Button variant="contained" size="large" onClick={handleJoin}>
+                    Join
+                </Button>
+            </Box>
         </Box>
     );
 }
