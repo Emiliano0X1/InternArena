@@ -5,6 +5,7 @@ import Login from "./screens/Login/Login"
 import Register from "./screens/Register/Register"
 import MatchPage from "./screens/MatchPage/MatchPage";
 import StoreView from "./screens/Store/Store";
+import JoinLobby from "./screens/JoinLobby/JoinLobby";
 
 function App() {
   return (
@@ -17,6 +18,9 @@ function App() {
         <Route path="/register" element={<Register/>} />
         <Route path="/matchpage" element={<MatchPage/>} />
         <Route path="/store" element={<StoreView/>}/>
+        <Route path="/join" element={<JoinLobby/>}/>
+        
+        
       </Routes>
     </div>
   );
