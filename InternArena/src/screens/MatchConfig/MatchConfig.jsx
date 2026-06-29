@@ -11,9 +11,27 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { useMutation } from "@tanstack/react-query";
 
 function MatchConfig() {
     const navigate = useNavigate();
+    const createMatchMutation = useMutation({
+    mutationFn: async (payload) => {
+        const response = await fetch("http://localhost:8080/api/match", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        });
+        if (!response.ok) throw new Error("Failed to create match");
+        return response.json();
+    },
+    onSuccess: () => {
+        setToast({ open: true, severity: "success", message: "Match created successfully!" });
+    },
+    onError: () => {
+        setToast({ open: true, severity: "error", message: "Failed to create match." });
+    },
+});
     //Difficulty
     //Time
     //Prize
@@ -104,16 +122,12 @@ function MatchConfig() {
     };
 
     const handleCreateMatch = () => {
-        if (!validateForm()) {
-            setToast({ open: true, severity: "error", message: "Fill all required fields before creating the match." });
-            return;
-        }
-
-        const payload = buildPayloadForBackend();
-
-        // TODO: replace with your real backend call (fetch/axios)
-        console.log("CreateMatch payload:", payload);
-        setToast({ open: true, severity: "success", message: "Match payload ready to send." });
+    if (!validateForm()) {
+        setToast({ open: true, severity: "error", message: "Fill all required fields before creating the match." });
+        return;
+    }
+    const payload = buildPayloadForBackend();
+    createMatchMutation.mutate(payload);
     };
 
     const openDifficulty = () => {
