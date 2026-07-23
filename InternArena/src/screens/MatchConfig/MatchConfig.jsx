@@ -11,9 +11,14 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { useCreateMatch } from "../../hooks/useCreateMatch";
 
 function MatchConfig() {
     const navigate = useNavigate();
+    const createMatchMutation = useCreateMatch(
+    () => setToast({ open: true, severity: "success", message: "Match created successfully!" }),
+    () => setToast({ open: true, severity: "error", message: "Failed to create match." })
+);
     //Difficulty
     //Time
     //Prize
@@ -103,17 +108,13 @@ function MatchConfig() {
         return !nextErrors.difficulty && !nextErrors.matchEndDate && !nextErrors.prize;
     };
 
-    const handleCreateMatch = () => {
-        if (!validateForm()) {
+        const handleCreateMatch = () => {
+            if (!validateForm()) {
             setToast({ open: true, severity: "error", message: "Fill all required fields before creating the match." });
-            return;
-        }
-
+                return;
+    }
         const payload = buildPayloadForBackend();
-
-        // TODO: replace with your real backend call (fetch/axios)
-        console.log("CreateMatch payload:", payload);
-        setToast({ open: true, severity: "success", message: "Match payload ready to send." });
+        createMatchMutation.mutate(payload);
     };
 
     const openDifficulty = () => {
