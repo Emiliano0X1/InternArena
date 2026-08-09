@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useMatchInfo } from "../../hooks/useMatchInfo";
 
-const MATCH_ID = 1; 
+const MATCH_ID = 1;
 
 function MatchPage() {
     const navigate = useNavigate();
@@ -29,16 +29,17 @@ function MatchPage() {
                             Back
                         </Button>
 
-                        {!isLoading && matchInfo && (
-                            <Paper variant="outlined" sx={{ px: 2, py: 1, minWidth: 160 }}>
-                                <Typography variant="body2" fontWeight={700}>
-                                    Winner Prize: {matchInfo.prize}
-                                </Typography>
-                                <Typography variant="body2" fontWeight={700}>
-                                    Current Players: {matchInfo.currentPlayers}
-                                </Typography>
-                            </Paper>
-                        )}
+                        <Paper
+                            variant="outlined"
+                            sx={{ px: 2, py: 1, minWidth: 180 }}
+                        >
+                            <Typography variant="body2" fontWeight={700}>
+                                Winner Prize: {isLoading ? "..." : matchInfo?.prize ?? "—"}
+                            </Typography>
+                            <Typography variant="body2" fontWeight={700}>
+                                Current Players: {isLoading ? "..." : matchInfo?.currentPlayers ?? "—"}
+                            </Typography>
+                        </Paper>
 
                         <Box sx={{ flex: 1, textAlign: "center" }}>
                             <Typography variant="h3" sx={{ fontWeight: 800, letterSpacing: -0.6 }}>
