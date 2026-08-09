@@ -13,7 +13,6 @@ function JoinLobby() {
             setError("Please enter a lobby code");
             return;
         }
-        // veriify with backend if the lobby exist
         console.log("Joining lobby:", code);
     };
 
@@ -27,7 +26,6 @@ function JoinLobby() {
             >
                 Back
             </Button>
-
             <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
                 <Typography variant="h4">Join a Lobby</Typography>
                 <TextField

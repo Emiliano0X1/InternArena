@@ -12,13 +12,29 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useCreateMatch } from "../../hooks/useCreateMatch";
+import Chip from "@mui/material/Chip";
+import TextField from "@mui/material/TextField";
 
 function MatchConfig() {
     const navigate = useNavigate();
+    const LEETCODE_TOPICS = [
+    "Array", "String", "Hash Table", "Math", "Dynamic Programming",
+    "Sorting", "Greedy", "Depth-First Search", "Binary Search", "Database",
+    "Bit Manipulation", "Matrix", "Tree", "Prefix Sum", "Breadth-First Search",
+    "Two Pointers", "Heap (Priority Queue)", "Stack", "Graph", "Sliding Window",
+    "Backtracking", "Linked List", "Recursion", "Divide and Conquer", "Memoization",
+    "Trie", "Union Find", "Monotonic Stack", "Topological Sort", "Number Theory",
+    "String Matching", "Simulation", "Combinatorics", "Queue", "Game Theory"
+    ];
+
+    const [selectedTopics, setSelectedTopics] = useState([]);
+    const [draftTopics, setDraftTopics] = useState([]);
+    const [topicSearch, setTopicSearch] = useState("");
     const createMatchMutation = useCreateMatch(
     () => setToast({ open: true, severity: "success", message: "Match created successfully!" }),
     () => setToast({ open: true, severity: "error", message: "Failed to create match." })
-);
+    );
+    
     //Difficulty
     //Time
     //Prize
@@ -81,6 +97,7 @@ function MatchConfig() {
         return {
             difficulty,              // "Easy" | "Medium" | "Hard"
             prize,                   // string
+            topics: selectedTopics,
             startDate: startYYYYMMDD, // "YYYY-MM-DD"
             endDate: matchEndDate,    // "YYYY-MM-DD"
             durationDays,             // number (1..31)
@@ -287,16 +304,70 @@ function MatchConfig() {
                         )}
 
                         {/*Topics*/}
-                        <Button size="large" variant="outlined" onClick={() => setShowTopic(true)} sx={{ py: 2.5 }}>
-                            Topics
-                        </Button>
+                <Button size="large" variant="outlined" onClick={() => {
+                    setDraftTopics(selectedTopics);
+                    setTopicSearch("");
+                    setShowTopic(true);
+                    }} sx={{ py: 2.5 }}>
+                    {selectedTopics.length > 0 ? `Topics: ${selectedTopics.length} selected` : "Topics"}
+                </Button>
 
-                        {/* Render del Popup */}
-                        {showTopic && (
-                            <Popup title="Choose Topics" onClose={() => setShowTopic(false)}>
-                            <Typography variant="outlined">Coming Soon</Typography>
-                            </Popup>
-                        )}
+                {showTopic && (
+                <Popup title="Choose Topics" onClose={() => setShowTopic(false)}>
+                <TextField placeholder="Search..."
+                size="small"
+                value={topicSearch}
+                onChange={(e) => setTopicSearch(e.target.value)}
+                fullWidth
+        />
+                <Box sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 1,
+                maxHeight: 220,
+                overflowY: "auto",
+                py: 1
+        }}>
+            {LEETCODE_TOPICS
+                .filter(t => t.toLowerCase().includes(topicSearch.toLowerCase()))
+                .map((topic) => (
+                    <Chip
+                        key={topic}
+                        label={topic}
+                        clickable
+                        color={draftTopics.includes(topic) ? "primary" : "default"}
+                        onClick={() => {
+                            setDraftTopics(prev =>
+                                prev.includes(topic)
+                                    ? prev.filter(t => t !== topic)
+                                    : [...prev, topic]
+                            );
+                        }}
+                    />
+                ))
+            }
+        </Box>
+            <Stack direction="row" justifyContent="space-between">
+            <Button
+                variant="text"
+                color="error"
+                onClick={() => setDraftTopics([])}
+            >
+                Reset
+            </Button>
+            <Button
+                variant="contained"
+                onClick={() => {
+                    setSelectedTopics(draftTopics);
+                    setShowTopic(false);
+                }}
+            >
+                Confirm
+            </Button>
+             </Stack>
+            </Popup>
+            )}
+            
                         </Box>
 
                         <Stack direction="row" justifyContent="center" sx={{ mt: 3 }}>

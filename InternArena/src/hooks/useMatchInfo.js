@@ -8,7 +8,7 @@ export const useMatchInfo = (matchId) => {
             if (!response.ok) throw new Error("Failed to fetch match info");
             return response.json();
         },
-        refetchInterval: 10000, 
+        refetchInterval: 10000,
         enabled: !!matchId,
     });
 };
