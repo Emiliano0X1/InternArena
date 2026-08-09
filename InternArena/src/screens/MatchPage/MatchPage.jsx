@@ -7,10 +7,14 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import { useMatchInfo } from "../../hooks/useMatchInfo";
+
+const MATCH_ID = 1;
 
 function MatchPage() {
     const navigate = useNavigate();
-    
+    const { data: matchInfo, isLoading } = useMatchInfo(MATCH_ID);
+
     return (
         <Box sx={{ height: "100vh", bgcolor: "background.default", color: "text.primary", overflow: "hidden" }}>
             <Container maxWidth={false} sx={{ py: 2, height: "100%" }}>
@@ -25,6 +29,18 @@ function MatchPage() {
                             Back
                         </Button>
 
+                        <Paper
+                            variant="outlined"
+                            sx={{ px: 2, py: 1, minWidth: 180 }}
+                        >
+                            <Typography variant="body2" fontWeight={700}>
+                                Winner Prize: {isLoading ? "..." : matchInfo?.prize ?? "—"}
+                            </Typography>
+                            <Typography variant="body2" fontWeight={700}>
+                                Current Players: {isLoading ? "..." : matchInfo?.currentPlayers ?? "—"}
+                            </Typography>
+                        </Paper>
+
                         <Box sx={{ flex: 1, textAlign: "center" }}>
                             <Typography variant="h3" sx={{ fontWeight: 800, letterSpacing: -0.6 }}>
                                 Match of Emiliano
@@ -33,18 +49,16 @@ function MatchPage() {
                                 Time left: 00:14:23:09
                             </Typography>
                         </Box>
-
                         <Button variant="contained" onClick={() => navigate("/login")}>
                             Log In / Register
                         </Button>
                     </Stack>
                 </Paper>
-
                 <Paper sx={{ p: { xs: 2, md: 3 }, height: "calc(100% - 104px)", overflow: "auto" }}>
                     <LeetcodeSet/>
                 </Paper>
             </Container>
-        </Box>    
+        </Box>
     );
 }
 
