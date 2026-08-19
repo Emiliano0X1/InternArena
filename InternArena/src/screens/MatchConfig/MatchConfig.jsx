@@ -2,7 +2,7 @@ import { FaLongArrowAltLeft } from "react-icons/fa";
 import Players from "./components/Players";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Popup from "./components/Popup";
+import Popup from "../../components/Popup";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
@@ -14,6 +14,12 @@ import Alert from "@mui/material/Alert";
 import { useCreateMatch } from "../../hooks/useCreateMatch";
 import Chip from "@mui/material/Chip";
 import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
+import SpeedIcon from "@mui/icons-material/Speed";
+
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import TopicIcon from "@mui/icons-material/Topic";
 
 function MatchConfig() {
     const navigate = useNavigate();
@@ -150,242 +156,302 @@ function MatchConfig() {
     };
     
     return (
-        <Box sx={{ height: "100vh", bgcolor: "background.default", color: "text.primary", overflow: "hidden" }}>
-            <Container maxWidth={false} sx={{ py: 2, height: "50%" }}>
-                <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 2 }}>
+        <Box sx={{ minHeight: "100vh", bgcolor: "background.default", color: "text.primary", py: { xs: 2, md: 4 } }}>
+            <Container maxWidth="xl" sx={{ height: "100%" }}>
+                <Stack direction={{ xs: "column", sm: "row" }} alignItems={{ xs: "flex-start", sm: "center" }} spacing={1.5} sx={{ mb: 4 }}>
                     <Button
-                        variant="text"
+                        variant="outlined"
                         onClick={() => navigate("/")}
                         startIcon={<FaLongArrowAltLeft />}
-                        sx={{ color: "text.secondary" }}
+                        sx={{ color: "text.secondary", borderColor: "rgba(255,255,255,0.1)", borderRadius: 1 }}
                     >
                         Back
                     </Button>
-                    <Typography variant="body1" color="text.secondary" sx={{ ml: 1 }}>
-                        Invitation Code: https://www.linkedin.com/feed/
+                    <Typography variant="body2" color="text.secondary" sx={{ ml: { xs: 0, sm: "auto" }, mt: { xs: 1.5, sm: 0 }, fontFamily: "monospace" }}>
+                        Invite Link: <span style={{ color: "#f97316" }}>https://leetcode.arena/join</span>
                     </Typography>
                 </Stack>
 
-                <Box sx={{ display: "flex", gap: 2, height: "calc(100% - 56px)", minHeight: 0 }}>
-                    <Paper sx={{ flex: 1, p: { xs: 2, md: 3 }, overflow: "auto" }}>
-                        <Typography variant="h3" sx={{ textAlign: "center", mb: 3, fontWeight: 800, letterSpacing: -0.5 }}>
-                            Match Configuration
-                        </Typography>
+                <Grid container spacing={4} alignItems="flex-start">
+                    {/* Left Form Panel */}
+                    <Grid size={{ xs: 12, md: 7, lg: 8 }}>
+                        <Paper sx={{ p: { xs: 3, md: 4.5 } }}>
+                            <Typography variant="h3" sx={{ mb: 1, fontWeight: 900, textAlign: "left" }}>
+                                Lobby Configuration
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" sx={{ mb: 4, textAlign: "left" }}>
+                                Define the parameters for the arena lobby to start the contest.
+                            </Typography>
 
-                        <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 2, justifyItems: "stretch" }}>
-                            <Button
-                                size="large"
-                                variant="outlined"
-                                onClick={openDifficulty}
-                                color={formErrors.difficulty ? "error" : "primary"}
-                                sx={{ py: 2.5 }}
-                            >
-                                {difficulty ? `Difficulty: ${difficulty}` : "Difficulty"}
-                            </Button>
+                            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, gap: 3, mb: 4 }}>
+                                {/* Difficulty Option */}
+                                <Button
+                                    size="large"
+                                    variant="outlined"
+                                    onClick={openDifficulty}
+                                    color={formErrors.difficulty ? "error" : "primary"}
+                                    startIcon={<SpeedIcon />}
+                                    sx={{ 
+                                        py: 3, 
+                                        flexDirection: "column", 
+                                        gap: 1, 
+                                        fontSize: "0.95rem",
+                                        borderColor: difficulty ? "primary.main" : "rgba(255,255,255,0.1)",
+                                        bgcolor: difficulty ? "rgba(249, 115, 22, 0.03)" : "transparent",
+                                        "& .MuiButton-startIcon": { margin: 0 }
+                                    }}
+                                >
+                                    <span style={{ fontSize: "0.75rem", textTransform: "uppercase", opacity: 0.6 }}>Difficulty</span>
+                                    <strong>{difficulty || "Select Difficulty"}</strong>
+                                </Button>
 
-                        {/* Render del Popup */}
-                        {showDiff && (
-                            <Popup title="Choose Difficulty" onClose={() => setShowDiff(false)}>
-                            <Button
-                                variant={draftDifficulty === "Easy" ? "contained" : "outlined"}
-                                onClick={() => setDraftDifficulty("Easy")}
-                            >
-                                Easy
-                            </Button>
-                            <Button
-                                variant={draftDifficulty === "Medium" ? "contained" : "outlined"}
-                                onClick={() => setDraftDifficulty("Medium")}
-                            >
-                                Medium
-                            </Button>
-                            <Button
-                                variant={draftDifficulty === "Hard" ? "contained" : "outlined"}
-                                onClick={() => setDraftDifficulty("Hard")}
-                            >
-                                Hard
-                            </Button>
-                            <Button
-                                variant="contained"
-                                onClick={() => {
-                                    setDifficulty(draftDifficulty);
-                                    setFormErrors((prev) => ({ ...prev, difficulty: "" }));
-                                    setShowDiff(false);
-                                }}
-                                disabled={!draftDifficulty}
-                            >
-                                Confirm
-                            </Button>
-                            </Popup>
-                        )}
+                                {/* Difficulty Popup */}
+                                {showDiff && (
+                                    <Popup title="Choose Difficulty" onClose={() => setShowDiff(false)}>
+                                        <Stack direction="row" spacing={1.5} justifyContent="center" sx={{ my: 1 }}>
+                                            {["Easy", "Medium", "Hard"].map((d) => (
+                                                <Button
+                                                    key={d}
+                                                    variant={draftDifficulty === d ? "contained" : "outlined"}
+                                                    onClick={() => setDraftDifficulty(d)}
+                                                    color={d === "Easy" ? "success" : d === "Medium" ? "warning" : "error"}
+                                                    sx={{ flex: 1, py: 1.5 }}
+                                                >
+                                                    {d}
+                                                </Button>
+                                            ))}
+                                        </Stack>
+                                        <Button
+                                            variant="contained"
+                                            onClick={() => {
+                                                setDifficulty(draftDifficulty);
+                                                setFormErrors((prev) => ({ ...prev, difficulty: "" }));
+                                                setShowDiff(false);
+                                            }}
+                                            disabled={!draftDifficulty}
+                                            sx={{ mt: 2, py: 1.5 }}
+                                        >
+                                            Confirm
+                                        </Button>
+                                    </Popup>
+                                )}
 
-                        {/*Time*/}
-                        <Button
-                            size="large"
-                            variant="outlined"
-                            onClick={openTime}
-                            color={formErrors.matchEndDate ? "error" : "primary"}
-                            sx={{ py: 2.5 }}
-                        >
-                            {matchEndDate ? `Time: ${matchEndDate}` : "Time"}
-                        </Button>
+                                {/* Time Option */}
+                                <Button
+                                    size="large"
+                                    variant="outlined"
+                                    onClick={openTime}
+                                    color={formErrors.matchEndDate ? "error" : "primary"}
+                                    startIcon={<CalendarMonthIcon />}
+                                    sx={{ 
+                                        py: 3, 
+                                        flexDirection: "column", 
+                                        gap: 1, 
+                                        fontSize: "0.95rem",
+                                        borderColor: matchEndDate ? "primary.main" : "rgba(255,255,255,0.1)",
+                                        bgcolor: matchEndDate ? "rgba(249, 115, 22, 0.03)" : "transparent",
+                                        "& .MuiButton-startIcon": { margin: 0 }
+                                    }}
+                                >
+                                    <span style={{ fontSize: "0.75rem", textTransform: "uppercase", opacity: 0.6 }}>Duration / End Date</span>
+                                    <strong>{matchEndDate || "Select End Date"}</strong>
+                                </Button>
 
-                        {/* Render del Popup */}
-                        {showTime && (
-                            <Popup title="Choose Time" onClose={() => setShowTime(false)}>
-                            <Box>
-                                <input
-                                    type="date"
-                                    min={minEndStr}
-                                    max={maxEndStr}
-                                    value={draftMatchEndDate}
-                                    onChange={(e) => setDraftMatchEndDate(e.target.value)}
-                                />
-                                {formErrors.matchEndDate ? (
-                                    <Typography variant="caption" color="error" sx={{ display: "block", mt: 1 }}>
-                                        {formErrors.matchEndDate}
-                                    </Typography>
-                                ) : null}
+                                {/* Time Popup */}
+                                {showTime && (
+                                    <Popup title="Choose End Date" onClose={() => setShowTime(false)}>
+                                        <Box sx={{ my: 1 }}>
+                                            <input
+                                                type="date"
+                                                min={minEndStr}
+                                                max={maxEndStr}
+                                                value={draftMatchEndDate}
+                                                onChange={(e) => setDraftMatchEndDate(e.target.value)}
+                                                className="w-full bg-[#282424] text-white rounded-lg border border-neutral-700/60 p-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+                                            />
+                                            {formErrors.matchEndDate && (
+                                                <Typography variant="caption" color="error" sx={{ display: "block", mt: 1 }}>
+                                                    {formErrors.matchEndDate}
+                                                </Typography>
+                                            )}
+                                        </Box>
+                                        <Button
+                                            variant="contained"
+                                            onClick={() => {
+                                                setMatchEndDate(draftMatchEndDate);
+                                                setFormErrors((prev) => ({ ...prev, matchEndDate: "" }));
+                                                setShowTime(false);
+                                            }}
+                                            disabled={!draftMatchEndDate}
+                                            sx={{ mt: 2, py: 1.5 }}
+                                        >
+                                            Submit
+                                        </Button>
+                                    </Popup>
+                                )}
+
+                                {/* Prize Option */}
+                                <Button
+                                    size="large"
+                                    variant="outlined"
+                                    onClick={openPrize}
+                                    color={formErrors.prize ? "error" : "primary"}
+                                    startIcon={<EmojiEventsIcon />}
+                                    sx={{ 
+                                        py: 3, 
+                                        flexDirection: "column", 
+                                        gap: 1, 
+                                        fontSize: "0.95rem",
+                                        borderColor: prize ? "primary.main" : "rgba(255,255,255,0.1)",
+                                        bgcolor: prize ? "rgba(249, 115, 22, 0.03)" : "transparent",
+                                        "& .MuiButton-startIcon": { margin: 0 }
+                                    }}
+                                >
+                                    <span style={{ fontSize: "0.75rem", textTransform: "uppercase", opacity: 0.6 }}>Winner Prize</span>
+                                    <strong>{prize || "Enter Prize Details"}</strong>
+                                </Button>
+
+                                {/* Prize Popup */}
+                                {showPrize && (
+                                    <Popup title="Enter Winner Prize" onClose={() => setShowPrize(false)}>
+                                        <Box sx={{ my: 1 }}>
+                                            <input
+                                                type="text"
+                                                placeholder="Cool prize for winner"
+                                                value={draftPrize}
+                                                onChange={(e) => setDraftPrize(e.target.value)}
+                                                className="w-full bg-[#282424] text-white rounded-lg border border-neutral-700/60 p-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+                                            />
+                                            {formErrors.prize && (
+                                                <Typography variant="caption" color="error" sx={{ display: "block", mt: 1 }}>
+                                                    {formErrors.prize}
+                                                </Typography>
+                                            )}
+                                        </Box>
+                                        <Button
+                                            variant="contained"
+                                            onClick={() => {
+                                                setPrize(draftPrize.trim());
+                                                setFormErrors((prev) => ({ ...prev, prize: "" }));
+                                                setShowPrize(false);
+                                            }}
+                                            disabled={!draftPrize.trim()}
+                                            sx={{ mt: 2, py: 1.5 }}
+                                        >
+                                            Submit
+                                        </Button>
+                                    </Popup>
+                                )}
+
+                                {/* Topics Option */}
+                                <Button
+                                    size="large"
+                                    variant="outlined"
+                                    onClick={() => {
+                                        setDraftTopics(selectedTopics);
+                                        setTopicSearch("");
+                                        setShowTopic(true);
+                                    }}
+                                    startIcon={<TopicIcon />}
+                                    sx={{ 
+                                        py: 3, 
+                                        flexDirection: "column", 
+                                        gap: 1, 
+                                        fontSize: "0.95rem",
+                                        borderColor: selectedTopics.length > 0 ? "primary.main" : "rgba(255,255,255,0.1)",
+                                        bgcolor: selectedTopics.length > 0 ? "rgba(249, 115, 22, 0.03)" : "transparent",
+                                        "& .MuiButton-startIcon": { margin: 0 }
+                                    }}
+                                >
+                                    <span style={{ fontSize: "0.75rem", textTransform: "uppercase", opacity: 0.6 }}>Topics Selected</span>
+                                    <strong>{selectedTopics.length > 0 ? `${selectedTopics.length} Topics` : "All Topics"}</strong>
+                                </Button>
+
+                                {/* Topics Popup */}
+                                {showTopic && (
+                                    <Popup title="Choose Topics" onClose={() => setShowTopic(false)}>
+                                        <TextField 
+                                            placeholder="Search topics..."
+                                            size="small"
+                                            value={topicSearch}
+                                            onChange={(e) => setTopicSearch(e.target.value)}
+                                            fullWidth
+                                        />
+                                        <Box sx={{
+                                            display: "flex",
+                                            flexWrap: "wrap",
+                                            gap: 1,
+                                            maxHeight: 220,
+                                            overflowY: "auto",
+                                            py: 1,
+                                            my: 1
+                                        }}>
+                                            {LEETCODE_TOPICS
+                                                .filter(t => t.toLowerCase().includes(topicSearch.toLowerCase()))
+                                                .map((topic) => (
+                                                    <Chip
+                                                        key={topic}
+                                                        label={topic}
+                                                        clickable
+                                                        color={draftTopics.includes(topic) ? "primary" : "default"}
+                                                        onClick={() => {
+                                                            setDraftTopics(prev =>
+                                                                prev.includes(topic)
+                                                                    ? prev.filter(t => t !== topic)
+                                                                    : [...prev, topic]
+                                                            );
+                                                        }}
+                                                        sx={{ borderRadius: 1 }}
+                                                    />
+                                                ))
+                                            }
+                                        </Box>
+                                        <Stack direction="row" justifyContent="space-between" sx={{ mt: 2 }}>
+                                            <Button
+                                                variant="text"
+                                                color="error"
+                                                onClick={() => setDraftTopics([])}
+                                            >
+                                                Reset
+                                            </Button>
+                                            <Button
+                                                variant="contained"
+                                                onClick={() => {
+                                                    setSelectedTopics(draftTopics);
+                                                    setShowTopic(false);
+                                                }}
+                                            >
+                                                Confirm
+                                            </Button>
+                                        </Stack>
+                                    </Popup>
+                                )}
                             </Box>
-                            <Button
-                                variant="contained"
-                                onClick={() => {
-                                    setMatchEndDate(draftMatchEndDate);
-                                    setFormErrors((prev) => ({ ...prev, matchEndDate: "" }));
-                                    setShowTime(false);
-                                }}
-                                disabled={!draftMatchEndDate}
-                            >
-                                Submit
-                            </Button>
-                            
-                            </Popup>
-                        )}
 
-                        {/*Prize*/}
-                        <Button
-                            size="large"
-                            variant="outlined"
-                            onClick={openPrize}
-                            color={formErrors.prize ? "error" : "primary"}
-                            sx={{ py: 2.5 }}
-                        >
-                            {prize ? `Prize: ${prize}` : "Prize"}
-                        </Button>
+                            <Stack direction="row" justifyContent="center" sx={{ mt: 4 }}>
+                                <Button
+                                    size="large"
+                                    variant="contained"
+                                    onClick={handleCreateMatch}
+                                    sx={{ 
+                                        px: 6, 
+                                        py: 2, 
+                                        borderRadius: 3, 
+                                        fontSize: "1rem", 
+                                        fontWeight: 700 
+                                    }}
+                                >
+                                    Create Arena Lobby
+                                </Button>
+                            </Stack>
+                        </Paper>
+                    </Grid>
 
-                        {/* Render del Popup */}
-                        {showPrize && (
-                            <Popup title="Choose Prize" onClose={() => setShowPrize(false)}>
-                            <Box>
-                                <input
-                                    type="text"
-                                    placeholder="Cool prize for winner"
-                                    className="border rounded-xl p-2"
-                                    value={draftPrize}
-                                    onChange={(e) => setDraftPrize(e.target.value)}
-                                />
-                                {formErrors.prize ? (
-                                    <Typography variant="caption" color="error" sx={{ display: "block", mt: 1 }}>
-                                        {formErrors.prize}
-                                    </Typography>
-                                ) : null}
-                            </Box>
-                            <Button
-                                variant="contained"
-                                onClick={() => {
-                                    setPrize(draftPrize.trim());
-                                    setFormErrors((prev) => ({ ...prev, prize: "" }));
-                                    setShowPrize(false);
-                                }}
-                                disabled={!draftPrize.trim()}
-                            >
-                                Submit
-                            </Button>
-                            </Popup>
-                        )}
-
-                        {/*Topics*/}
-                <Button size="large" variant="outlined" onClick={() => {
-                    setDraftTopics(selectedTopics);
-                    setTopicSearch("");
-                    setShowTopic(true);
-                    }} sx={{ py: 2.5 }}>
-                    {selectedTopics.length > 0 ? `Topics: ${selectedTopics.length} selected` : "Topics"}
-                </Button>
-
-                {showTopic && (
-                <Popup title="Choose Topics" onClose={() => setShowTopic(false)}>
-                <TextField placeholder="Search..."
-                size="small"
-                value={topicSearch}
-                onChange={(e) => setTopicSearch(e.target.value)}
-                fullWidth
-        />
-                <Box sx={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 1,
-                maxHeight: 220,
-                overflowY: "auto",
-                py: 1
-        }}>
-            {LEETCODE_TOPICS
-                .filter(t => t.toLowerCase().includes(topicSearch.toLowerCase()))
-                .map((topic) => (
-                    <Chip
-                        key={topic}
-                        label={topic}
-                        clickable
-                        color={draftTopics.includes(topic) ? "primary" : "default"}
-                        onClick={() => {
-                            setDraftTopics(prev =>
-                                prev.includes(topic)
-                                    ? prev.filter(t => t !== topic)
-                                    : [...prev, topic]
-                            );
-                        }}
-                    />
-                ))
-            }
-        </Box>
-            <Stack direction="row" justifyContent="space-between">
-            <Button
-                variant="text"
-                color="error"
-                onClick={() => setDraftTopics([])}
-            >
-                Reset
-            </Button>
-            <Button
-                variant="contained"
-                onClick={() => {
-                    setSelectedTopics(draftTopics);
-                    setShowTopic(false);
-                }}
-            >
-                Confirm
-            </Button>
-             </Stack>
-            </Popup>
-            )}
-            
-                        </Box>
-
-                        <Stack direction="row" justifyContent="center" sx={{ mt: 3 }}>
-                            <Button
-                                size="large"
-                                variant="contained"
-                                sx={{ px: 5, py: 1.75 }}
-                                onClick={handleCreateMatch}
-                            >
-                                Create Match
-                            </Button>
-                        </Stack>
-                    </Paper>
-
-                    <Box sx={{ width: 420, maxWidth: "40vw", flexShrink: 0, display: { xs: "none", md: "flex" }, alignItems: "flex-start" }}>
+                    {/* Right Players Panel */}
+                    <Grid size={{ xs: 12, md: 5, lg: 4 }}>
                         <Players />
-                    </Box>
-                </Box>
+                    </Grid>
+                </Grid>
             </Container>
 
             <Snackbar
@@ -398,7 +464,7 @@ function MatchConfig() {
                     onClose={() => setToast((t) => ({ ...t, open: false }))}
                     severity={toast.severity}
                     variant="filled"
-                    sx={{ width: "100%" }}
+                    sx={{ width: "100%", borderRadius: 3 }}
                 >
                     {toast.message}
                 </Alert>
@@ -408,3 +474,4 @@ function MatchConfig() {
 }
 
 export default MatchConfig;
+

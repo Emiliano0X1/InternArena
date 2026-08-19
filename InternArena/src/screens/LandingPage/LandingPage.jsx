@@ -5,34 +5,43 @@ import Post from "./components/Post"
 import ActiveMatches from "./components/ActiveMatches"
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid"; // Standard MUI Grid
+
 
 function LandingPage(){
-
     return (
-        <Box sx={{ height: "100vh", bgcolor: "background.default", color: "text.primary", display: "flex", flexDirection: "column" }}>
+        <Box sx={{ minHeight: "100vh", bgcolor: "background.default", color: "text.primary", display: "flex", flexDirection: "column" }}>
             <Header/>
-            <Container maxWidth={false} sx={{ flex: 1, minHeight: 0, py: 2 }}>
-                <Box sx={{ display: "flex", gap: 2, height: "100%", minHeight: 0, overflow: "hidden" }}>
-                    <Box className="scrollbar-hide" sx={{ width: 360, maxWidth: "36vw", overflowY: "auto", minWidth: 0, pr: 0.5 }}>
-                        <SideProfile/>   
-                        <RecentRankings/> 
-                    </Box>
+            
+            <Container maxWidth="xl" sx={{ flex: 1, py: { xs: 2, md: 4 }, display: "flex", flexDirection: "column" }}>
+                <Grid container spacing={{ xs: 3, lg: 4 }} sx={{ flex: 1, alignItems: "stretch" }}>
+                    
+                    {/* Left Column - Profile & Recent Rankings */}
+                    <Grid size={{ xs: 12, md: 4, lg: 3 }} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                        <Box sx={{ position: { lg: "sticky" }, top: 88 }}>
+                            <SideProfile/>   
+                            <RecentRankings/> 
+                        </Box>
+                    </Grid>
 
-                    <Box className="scrollbar-hide" sx={{ flex: 1, overflowY: "auto", minWidth: 0, px: 0.5 }}>
+                    {/* Center Column - Posts */}
+                    <Grid size={{ xs: 12, md: 8, lg: 6 }} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                         <Post/>
                         <Post/>
                         <Post/>
-                    </Box>
+                    </Grid>
 
-                    <Box className="scrollbar-hide" sx={{ width: 360, maxWidth: "36vw", overflowY: "auto", minWidth: 0, pl: 0.5 }}>
-                        <ActiveMatches/>
-                        <ActiveMatches/>
-                        <ActiveMatches/>
-                    </Box>
-                </Box>
+                    {/* Right Column - Active Matches */}
+                    <Grid size={{ xs: 12, lg: 3 }} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                        <Box sx={{ position: { lg: "sticky" }, top: 88, display: "flex", flexDirection: "column", gap: 3 }}>
+                            <ActiveMatches/>
+                        </Box>
+                    </Grid>
+
+                </Grid>
             </Container>
         </Box>
     )
 }
 
-export default LandingPage
+export default LandingPage
