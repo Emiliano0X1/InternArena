@@ -1,114 +1,81 @@
-import { FaLongArrowAltLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import LeetcodeSet from "./components/LeetcodeSet";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import { useMatchInfo } from "../../hooks/useMatchInfo";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import PeopleIcon from "@mui/icons-material/People";
-import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
-
-const MATCH_ID = 1;
+import Ranking from "./components/Ranking";
+import PredictionChart from "./components/PredictionChart";
+import joeswag from "../../assets/joeswag.png";
+import { FaArrowLeft, FaChevronDown } from "react-icons/fa";
 
 function MatchPage() {
     const navigate = useNavigate();
-    const { data: matchInfo, isLoading } = useMatchInfo(MATCH_ID);
 
     return (
-        <Box sx={{ minHeight: "100vh", bgcolor: "background.default", color: "text.primary", py: { xs: 2, md: 4 } }}>
-            <Container maxWidth="xl" sx={{ height: "100%", display: "flex", flexDirection: "column", gap: 3 }}>
+        <div className="min-h-screen bg-[#282424] text-neutral-100 py-6 px-4 md:px-8">
+            {/* Top Bar / Header */}
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8 relative max-w-[1440px] mx-auto">
                 
-                {/* Header Card */}
-                <Paper sx={{ p: { xs: 2.5, md: 3.5 }, boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}>
-                    <Stack 
-                        direction={{ xs: "column", md: "row" }} 
-                        spacing={3} 
-                        alignItems="center" 
-                        justifyContent="space-between"
-                        sx={{ width: "100%" }}
+                {/* Left Side: Back button & Stats Box */}
+                <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-start">
+                    <button 
+                        onClick={() => navigate("/")} 
+                        className="flex items-center gap-2 border border-neutral-700/40 bg-[#2d2929]/30 hover:bg-neutral-800/80 hover:text-orange-500 text-neutral-300 px-4 py-2 rounded-xl transition-all duration-200 cursor-pointer font-semibold shadow-sm text-sm"
                     >
-                        {/* Navigation back and stats */}
-                        <Stack direction={{ xs: "row", md: "column" }} spacing={1.5} alignItems="flex-start" sx={{ width: { xs: "100%", md: "auto" }, justifyContent: "space-between" }}>
-                            <Button
-                                variant="outlined"
-                                onClick={() => navigate("/")}
-                                startIcon={<FaLongArrowAltLeft />}
-                                sx={{ color: "text.secondary", borderColor: "rgba(255,255,255,0.1)", px: 2.5, mb: { md: 1 } }}
-                            >
-                                Back
-                            </Button>
+                        <FaArrowLeft className="text-neutral-400" />
+                        <span>Back</span>
+                    </button>
+                    
+                    <div className="bg-[#201e1e]/90 border border-neutral-700/30 rounded-lg px-5 py-2.5 shadow-md">
+                        <div className="text-sm font-bold text-neutral-100 whitespace-nowrap">
+                            Winner Price: <span className="text-white">200 $</span>
+                        </div>
+                        <div className="text-sm font-bold text-neutral-100 mt-1 whitespace-nowrap">
+                            Current Players: <span className="text-white">6</span>
+                        </div>
+                    </div>
+                </div>
 
-                            <Stack direction="row" spacing={2.5}>
-                                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                                    <EmojiEventsIcon sx={{ color: "warning.main", fontSize: 20 }} />
-                                    <Box>
-                                        <Typography variant="caption" color="text.secondary" sx={{ display: "block", textTransform: "uppercase" }}>Prize</Typography>
-                                        <Typography variant="body2" sx={{ fontWeight: 700 }}>
-                                            {isLoading ? "..." : matchInfo?.prize ?? "—"}
-                                        </Typography>
-                                    </Box>
-                                </Box>
-                                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                                    <PeopleIcon sx={{ color: "primary.main", fontSize: 20 }} />
-                                    <Box>
-                                        <Typography variant="caption" color="text.secondary" sx={{ display: "block", textTransform: "uppercase" }}>Players</Typography>
-                                        <Typography variant="body2" sx={{ fontWeight: 700 }}>
-                                            {isLoading ? "..." : matchInfo?.currentPlayers ?? "—"}
-                                        </Typography>
-                                    </Box>
-                                </Box>
-                            </Stack>
-                        </Stack>
+                {/* Center Title and Countdown */}
+                <div className="flex flex-col items-center text-center flex-1">
+                    <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white">
+                        Partida Emiliano0X1
+                    </h1>
+                    <div className="text-5xl md:text-6xl font-normal italic mt-3 text-neutral-200 tracking-wide">
+                        00:14:23:09
+                    </div>
+                </div>
 
-                        {/* Title & Countdown */}
-                        <Box sx={{ textAlign: "center", flex: 1 }}>
-                            <Typography variant="h4" sx={{ fontWeight: 900, letterSpacing: -0.8, mb: 0.5 }}>
-                                {isLoading ? "Arena Match" : `Match of ${matchInfo?.creatorName || "Emiliano"}`}
-                            </Typography>
-                            <Stack direction="row" spacing={1} alignItems="center" justifyContent="center">
-                                <HourglassEmptyIcon sx={{ color: "primary.main", fontSize: 18 }} />
-                                <Typography 
-                                    variant="h6" 
-                                    sx={{ 
-                                        fontFamily: "monospace", 
-                                        fontWeight: 700, 
-                                        color: "primary.main",
-                                        letterSpacing: 1,
-                                        textShadow: "0 0 10px rgba(249, 115, 22, 0.25)" 
-                                    }}
-                                >
-                                    Time left: 00:14:23:09
-                                </Typography>
-                            </Stack>
-                        </Box>
+                {/* Right Side: Profile dropdown capsule */}
+                <div className="flex justify-end w-full md:w-auto">
+                    <div className="flex items-center gap-2 border border-neutral-700/30 bg-[#2d2929] px-3.5 py-1.5 rounded-lg shadow-sm cursor-pointer hover:bg-neutral-800/80 transition-all duration-200">
+                        <div className="w-8 h-8 rounded-full border border-orange-500/40 overflow-hidden bg-neutral-800 flex items-center justify-center">
+                            <img src={joeswag} alt="User Profile" className="w-full h-full object-cover" />
+                        </div>
+                        <span className="text-sm font-semibold text-neutral-200">Emiliano Gonzalez</span>
+                        <FaChevronDown className="text-neutral-400 text-xs ml-1" />
+                    </div>
+                </div>
+            </div>
 
-                        {/* CTA / Auth Actions */}
-                        <Button 
-                            variant="contained" 
-                            onClick={() => navigate("/login")}
-                            sx={{
-                                width: { xs: "100%", md: "auto" },
-                                borderRadius: 10,
-                                px: 4,
-                                py: 1.5,
-                                boxShadow: "0 4px 12px rgba(249, 115, 22, 0.2)",
-                            }}
-                        >
-                            Log In
-                        </Button>
-                    </Stack>
-                </Paper>
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-[1440px] mx-auto mt-10">
+                {/* Left Column: Leetcode Set Card */}
+                <div className="lg:col-span-5 bg-[#383434] border border-neutral-800/40 rounded-xl p-6 shadow-xl">
+                    <LeetcodeSet />
+                </div>
 
-                {/* Leetcode Set Card */}
-                <Paper sx={{ p: { xs: 3, md: 4.5 }, boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}>
-                    <LeetcodeSet/>
-                </Paper>
-            </Container>
-        </Box>
+                {/* Right Column: Ranking & Prediction Chart Card Stack */}
+                <div className="lg:col-span-7 flex flex-col gap-8">
+                    {/* Ranking Card */}
+                    <div className="bg-[#383434] border border-neutral-800/40 rounded-xl p-6 shadow-xl">
+                        <Ranking />
+                    </div>
+
+                    {/* Prediction Chart Card */}
+                    <div className="bg-[#383434] border border-neutral-800/40 rounded-xl p-6 shadow-xl">
+                        <PredictionChart />
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }
 
