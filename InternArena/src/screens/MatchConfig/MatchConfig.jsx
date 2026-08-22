@@ -24,23 +24,23 @@ import TopicIcon from "@mui/icons-material/Topic";
 function MatchConfig() {
     const navigate = useNavigate();
     const LEETCODE_TOPICS = [
-    "Array", "String", "Hash Table", "Math", "Dynamic Programming",
-    "Sorting", "Greedy", "Depth-First Search", "Binary Search", "Database",
-    "Bit Manipulation", "Matrix", "Tree", "Prefix Sum", "Breadth-First Search",
-    "Two Pointers", "Heap (Priority Queue)", "Stack", "Graph", "Sliding Window",
-    "Backtracking", "Linked List", "Recursion", "Divide and Conquer", "Memoization",
-    "Trie", "Union Find", "Monotonic Stack", "Topological Sort", "Number Theory",
-    "String Matching", "Simulation", "Combinatorics", "Queue", "Game Theory"
+        "Array", "String", "Hash Table", "Math", "Dynamic Programming",
+        "Sorting", "Greedy", "Depth-First Search", "Binary Search", "Database",
+        "Bit Manipulation", "Matrix", "Tree", "Prefix Sum", "Breadth-First Search",
+        "Two Pointers", "Heap (Priority Queue)", "Stack", "Graph", "Sliding Window",
+        "Backtracking", "Linked List", "Recursion", "Divide and Conquer", "Memoization",
+        "Trie", "Union Find", "Monotonic Stack", "Topological Sort", "Number Theory",
+        "String Matching", "Simulation", "Combinatorics", "Queue", "Game Theory"
     ];
 
     const [selectedTopics, setSelectedTopics] = useState([]);
     const [draftTopics, setDraftTopics] = useState([]);
     const [topicSearch, setTopicSearch] = useState("");
     const createMatchMutation = useCreateMatch(
-    () => setToast({ open: true, severity: "success", message: "Match created successfully!" }),
-    () => setToast({ open: true, severity: "error", message: "Failed to create match." })
+        () => setToast({ open: true, severity: "success", message: "Match created successfully!" }),
+        () => setToast({ open: true, severity: "error", message: "Failed to create match." })
     );
-    
+
     //Difficulty
     //Time
     //Prize
@@ -131,11 +131,11 @@ function MatchConfig() {
         return !nextErrors.difficulty && !nextErrors.matchEndDate && !nextErrors.prize;
     };
 
-        const handleCreateMatch = () => {
-            if (!validateForm()) {
+    const handleCreateMatch = () => {
+        if (!validateForm()) {
             setToast({ open: true, severity: "error", message: "Fill all required fields before creating the match." });
-                return;
-    }
+            return;
+        }
         const payload = buildPayloadForBackend();
         createMatchMutation.mutate(payload);
     };
@@ -154,7 +154,7 @@ function MatchConfig() {
         setDraftPrize(prize);
         setShowPrize(true);
     };
-    
+
     return (
         <Box sx={{ minHeight: "100vh", bgcolor: "background.default", color: "text.primary", py: { xs: 2, md: 4 } }}>
             <Container maxWidth="xl" sx={{ height: "100%" }}>
@@ -168,7 +168,7 @@ function MatchConfig() {
                         Back
                     </Button>
                     <Typography variant="body2" color="text.secondary" sx={{ ml: { xs: 0, sm: "auto" }, mt: { xs: 1.5, sm: 0 }, fontFamily: "monospace" }}>
-                        Invite Link: <span style={{ color: "#f97316" }}>https://leetcode.arena/join</span>
+                        Invite Code: <span style={{ color: "#f97316" }}>ARENA-9283</span>
                     </Typography>
                 </Stack>
 
@@ -191,10 +191,10 @@ function MatchConfig() {
                                     onClick={openDifficulty}
                                     color={formErrors.difficulty ? "error" : "primary"}
                                     startIcon={<SpeedIcon />}
-                                    sx={{ 
-                                        py: 3, 
-                                        flexDirection: "column", 
-                                        gap: 1, 
+                                    sx={{
+                                        py: 3,
+                                        flexDirection: "column",
+                                        gap: 1,
                                         fontSize: "0.95rem",
                                         borderColor: difficulty ? "primary.main" : "rgba(255,255,255,0.1)",
                                         bgcolor: difficulty ? "rgba(249, 115, 22, 0.03)" : "transparent",
@@ -243,10 +243,10 @@ function MatchConfig() {
                                     onClick={openTime}
                                     color={formErrors.matchEndDate ? "error" : "primary"}
                                     startIcon={<CalendarMonthIcon />}
-                                    sx={{ 
-                                        py: 3, 
-                                        flexDirection: "column", 
-                                        gap: 1, 
+                                    sx={{
+                                        py: 3,
+                                        flexDirection: "column",
+                                        gap: 1,
                                         fontSize: "0.95rem",
                                         borderColor: matchEndDate ? "primary.main" : "rgba(255,255,255,0.1)",
                                         bgcolor: matchEndDate ? "rgba(249, 115, 22, 0.03)" : "transparent",
@@ -297,10 +297,10 @@ function MatchConfig() {
                                     onClick={openPrize}
                                     color={formErrors.prize ? "error" : "primary"}
                                     startIcon={<EmojiEventsIcon />}
-                                    sx={{ 
-                                        py: 3, 
-                                        flexDirection: "column", 
-                                        gap: 1, 
+                                    sx={{
+                                        py: 3,
+                                        flexDirection: "column",
+                                        gap: 1,
                                         fontSize: "0.95rem",
                                         borderColor: prize ? "primary.main" : "rgba(255,255,255,0.1)",
                                         bgcolor: prize ? "rgba(249, 115, 22, 0.03)" : "transparent",
@@ -353,10 +353,10 @@ function MatchConfig() {
                                         setShowTopic(true);
                                     }}
                                     startIcon={<TopicIcon />}
-                                    sx={{ 
-                                        py: 3, 
-                                        flexDirection: "column", 
-                                        gap: 1, 
+                                    sx={{
+                                        py: 3,
+                                        flexDirection: "column",
+                                        gap: 1,
                                         fontSize: "0.95rem",
                                         borderColor: selectedTopics.length > 0 ? "primary.main" : "rgba(255,255,255,0.1)",
                                         bgcolor: selectedTopics.length > 0 ? "rgba(249, 115, 22, 0.03)" : "transparent",
@@ -370,7 +370,7 @@ function MatchConfig() {
                                 {/* Topics Popup */}
                                 {showTopic && (
                                     <Popup title="Choose Topics" onClose={() => setShowTopic(false)}>
-                                        <TextField 
+                                        <TextField
                                             placeholder="Search topics..."
                                             size="small"
                                             value={topicSearch}
@@ -433,12 +433,12 @@ function MatchConfig() {
                                     size="large"
                                     variant="contained"
                                     onClick={handleCreateMatch}
-                                    sx={{ 
-                                        px: 6, 
-                                        py: 2, 
-                                        borderRadius: 3, 
-                                        fontSize: "1rem", 
-                                        fontWeight: 700 
+                                    sx={{
+                                        px: 6,
+                                        py: 2,
+                                        borderRadius: 3,
+                                        fontSize: "1rem",
+                                        fontWeight: 700
                                     }}
                                 >
                                     Create Arena Lobby
