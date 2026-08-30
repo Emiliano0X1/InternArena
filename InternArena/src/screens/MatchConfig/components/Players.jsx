@@ -7,11 +7,13 @@ import GroupIcon from "@mui/icons-material/Group";
 import Paper from "@mui/material/Paper";
 import PropTypes from "prop-types";
 
-function Players({ initialPlayers = [] }) {
+import { deletePlayer } from "../../../services/playerService";
+
+function Players({ initialPlayers = [], onPlayerRemoved }) {
     const [players, setPlayers] = useState([]);
 
     useEffect(() => {
-        if (initialPlayers && initialPlayers.length > 0) {
+        if (Array.isArray(initialPlayers)) {
             setPlayers(
                 initialPlayers.map((p) => ({
                     id: p.player_id || p.id || Math.random(),
@@ -19,14 +21,20 @@ function Players({ initialPlayers = [] }) {
                 }))
             );
         } else {
-            setPlayers([
-                { id: 1, name: "Admin Host (You)" }
-            ]);
+            setPlayers([]);
         }
     }, [initialPlayers]);
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         setPlayers((prev) => prev.filter((p) => p.id !== id));
+        try {
+            if (id && typeof id === "number" && id > 0) {
+                await deletePlayer(id);
+                onPlayerRemoved?.(id);
+            }
+        } catch (err) {
+            console.error(`Failed to delete player ${id} on backend:`, err);
+        }
     };
 
     return (

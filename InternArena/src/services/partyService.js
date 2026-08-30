@@ -72,11 +72,99 @@ export const completeParty = async (partyData) => {
     return response.data;
 };
 
+/**
+ * 1.7. Eliminar / Cancelar sala (Host)
+ * DELETE /api/v1/partys/{id}
+ * 
+ * @param {number|string} partyId
+ * @returns {Promise<void>}
+ */
+export const deleteParty = async (partyId) => {
+    const response = await apiClient.delete(`/api/v1/partys/${partyId}`);
+    return response.data;
+};
+
+/**
+ * 1.8. Salir de una partida en curso (Leave Active Party)
+ * POST /api/v1/partys/{id}/leave?user_id={userId}
+ * O alternativo: POST /api/v1/partys/leave?party_id={partyId}&user_id={userId}
+ * 
+ * @param {Object|number|string} partyIdOrOptions - partyId o { partyId, userId }
+ * @param {number|string} [optionalUserId] - ID del usuario si el primer argumento es partyId
+ * @returns {Promise<Object>} Party actualizado o confirmación de salida
+ */
+export const leaveActiveParty = async (partyIdOrOptions, optionalUserId) => {
+    let partyId;
+    let userId;
+
+    if (typeof partyIdOrOptions === "object" && partyIdOrOptions !== null) {
+        partyId = partyIdOrOptions.partyId ?? partyIdOrOptions.party_id ?? partyIdOrOptions.id;
+        userId = partyIdOrOptions.userId ?? partyIdOrOptions.user_id;
+    } else {
+        partyId = partyIdOrOptions;
+        userId = optionalUserId;
+    }
+
+    if (!partyId) {
+        throw new Error("partyId is required to leave active party");
+    }
+
+    const response = await apiClient.post(`/api/v1/partys/${partyId}/leave`, null, {
+        params: userId ? { user_id: userId } : {}
+    });
+    return response.data;
+};
+
+/**
+ * 1.9. Salir de una sala como jugador en espera (Leave Party - Caso A)
+ * DELETE /api/v1/players/{playerId}
+ * 
+ * @param {number|string} playerId
+ * @returns {Promise<void>}
+ */
+export const leavePartyAsPlayer = async (playerId) => {
+    const response = await apiClient.delete(`/api/v1/players/${playerId}`);
+    return response.data;
+};
+
+/**
+ * Helper unificado para salir de una partida o sala de espera
+ * @param {Object} options
+ * @param {number|string} [options.partyId] - ID de la sala si es el Host cancelando o partida activa
+ * @param {number|string} [options.userId] - ID del usuario saliendo (para partida activa)
+ * @param {number|string} [options.playerId] - ID del jugador saliendo (para lobby en espera)
+ * @param {boolean} [options.isHost] - Si el usuario que sale es el anfitrión
+ * @param {boolean} [options.isActiveParty] - Si la partida está activa (ACTIVE)
+ */
+export const leaveParty = async ({ partyId, userId, playerId, isHost = false, isActiveParty = false } = {}) => {
+    // Si la partida está activa o se envió explícitamente userId + partyId sin playerId
+    if ((isActiveParty || (userId && partyId && !playerId)) && partyId && userId) {
+        return await leaveActiveParty({ partyId, userId });
+    }
+    if (isHost && partyId) {
+        return await deleteParty(partyId);
+    }
+    if (playerId) {
+        return await leavePartyAsPlayer(playerId);
+    }
+    if (partyId && userId) {
+        return await leaveActiveParty({ partyId, userId });
+    }
+    if (partyId) {
+        return await deleteParty(partyId);
+    }
+};
+
 export default {
     createPartyDefault,
     getPartyById,
     getAllParties,
     addNewPlayerToWaitingParty,
     joinPartyByCode,
-    completeParty
+    completeParty,
+    deleteParty,
+    leaveActiveParty,
+    leavePartyAsPlayer,
+    leaveParty,
 };
+

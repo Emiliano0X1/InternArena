@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "motion/react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -29,11 +30,12 @@ import joeswag from "../../assets/joeswag.png";
 
 function GuestWaitingRoom() {
     const navigate = useNavigate();
-    const { currentParty, partyId, invitationCode, refreshParty, clearParty } = useParty();
+    const { currentParty, partyId, invitationCode, guestUserId, guestPlayerId, refreshParty, leaveParty } = useParty();
 
     const [copied, setCopied] = useState(false);
     const [toast, setToast] = useState({ open: false, severity: "success", message: "" });
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const [isLeaving, setIsLeaving] = useState(false);
 
     // Auto-polling interval to keep joined players and status updated in real-time
     useEffect(() => {
@@ -71,15 +73,31 @@ function GuestWaitingRoom() {
         }
     };
 
-    const handleLeaveLobby = () => {
-        clearParty();
-        navigate("/");
+    const handleLeaveLobby = async () => {
+        setIsLeaving(true);
+        try {
+            const currentPartyId = partyId || currentParty?.party_id;
+            const uId = guestUserId 
+                || sessionStorage.getItem("internarena_user_id") 
+                || currentParty?.players?.find(p => String(p.player_id) === String(guestPlayerId))?.user?.user_id
+                || currentParty?.players?.find(p => String(p.player_id) === String(guestPlayerId))?.userId
+                || "2";
+            const pId = guestPlayerId || currentParty?.players?.find(p => String(p.userId) === String(uId) || String(p.user?.user_id) === String(uId))?.player_id;
+
+            await leaveParty({ partyId: currentPartyId, userId: uId, playerId: pId, isHost: false });
+            setToast({ open: true, severity: "info", message: "Left lobby successfully." });
+            setTimeout(() => {
+                navigate("/");
+            }, 300);
+        } catch (err) {
+            console.error("Error while leaving lobby:", err);
+            navigate("/");
+        } finally {
+            setIsLeaving(false);
+        }
     };
 
-    const playersList = currentParty?.players || [
-        { player_id: 1, playerUsername: currentParty?.user?.userEmail?.split("@")[0] || "Host Admin" },
-        { player_id: 2, playerUsername: "You (Guest)" },
-    ];
+    const playersList = currentParty?.players || [];
 
     const hostEmail = currentParty?.user?.userEmail || "Host";
 
@@ -98,10 +116,11 @@ function GuestWaitingRoom() {
                         <Button
                             variant="outlined"
                             onClick={handleLeaveLobby}
-                            startIcon={<ArrowBackIcon />}
+                            disabled={isLeaving}
+                            startIcon={isLeaving ? <CircularProgress size={16} color="inherit" /> : <ArrowBackIcon />}
                             sx={{ color: "text.secondary", borderColor: "rgba(255,255,255,0.1)", borderRadius: 1 }}
                         >
-                            Leave Lobby
+                            {isLeaving ? "Leaving..." : "Leave Lobby"}
                         </Button>
                         <Chip
                             label={`Lobby #${partyId || "—"}`}
@@ -345,6 +364,14 @@ function GuestWaitingRoom() {
                             })}
                         </AnimatePresence>
                     </Grid>
+
+                    {playersList.length === 0 && (
+                        <Paper sx={{ p: 4, textAlign: "center", bgcolor: "#2e2929", borderRadius: 2.5, border: "1px dashed rgba(255,255,255,0.1)" }}>
+                            <Typography variant="body1" color="text.secondary">
+                                No players currently in this waiting room.
+                            </Typography>
+                        </Paper>
+                    )}
                 </Box>
 
                 {/* Footer Controls */}
@@ -352,7 +379,8 @@ function GuestWaitingRoom() {
                     <Button
                         variant="outlined"
                         color="inherit"
-                        startIcon={<ExitToAppIcon />}
+                        disabled={isLeaving}
+                        startIcon={isLeaving ? <CircularProgress size={16} color="inherit" /> : <ExitToAppIcon />}
                         onClick={handleLeaveLobby}
                         sx={{
                             color: "text.secondary",
@@ -360,7 +388,7 @@ function GuestWaitingRoom() {
                             "&:hover": { borderColor: "rgba(255, 255, 255, 0.3)" },
                         }}
                     >
-                        Exit Waiting Room
+                        {isLeaving ? "Leaving..." : "Exit Waiting Room"}
                     </Button>
                 </Box>
             </Container>
