@@ -1,20 +1,44 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField, Typography, Paper, Container } from "@mui/material";
+import { Box, Button, TextField, Typography, Paper, Container, CircularProgress, Alert } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Header from "../LandingPage/components/Header";
+import { joinPartyByCode } from "../../services/partyService";
+import { savePartySession } from "../../utils/partyStorage";
+import { useParty } from "../../context/PartyContext";
 
 function JoinLobby() {
     const [code, setCode] = useState("");
     const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const { setCurrentParty } = useParty();
 
-    const handleJoin = () => {
-        if (!code.trim()) {
-            setError("Please enter a lobby code");
+    const handleJoin = async () => {
+        const trimmedCode = code.trim();
+        if (!trimmedCode) {
+            setError("Please enter a valid 6-digit lobby code");
             return;
         }
-        console.log("Joining lobby:", code);
+
+        setIsLoading(true);
+        setError("");
+
+        try {
+            // Default user_id=2 for joining guest/participant
+            const party = await joinPartyByCode(2, trimmedCode);
+            savePartySession(party);
+            setCurrentParty(party);
+            setIsLoading(false);
+            navigate("/match");
+        } catch (err) {
+            setIsLoading(false);
+            const errMsg =
+                err.message ||
+                err.response?.data?.error ||
+                `The party with code "${trimmedCode}" could not be joined.`;
+            setError(errMsg);
+        }
     };
 
     return (
@@ -54,21 +78,26 @@ function JoinLobby() {
                             Join Lobby
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            Enter the code shared by your teammate to enter the battle arena.
+                            Enter the 6-digit code shared by your host to enter the battle arena.
                         </Typography>
                     </Box>
+
+                    {error && (
+                        <Alert severity="error" variant="outlined" sx={{ borderRadius: 2 }}>
+                            {error}
+                        </Alert>
+                    )}
 
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                         <TextField
                             label="Lobby Access Code"
-                            placeholder="e.g. ARENA-9283"
+                            placeholder="e.g. 482910"
                             value={code}
                             onChange={(e) => {
                                 setCode(e.target.value);
                                 if (error) setError("");
                             }}
                             error={!!error}
-                            helperText={error}
                             fullWidth
                             slotProps={{
                                 inputLabel: { shrink: true }
@@ -78,13 +107,15 @@ function JoinLobby() {
                             variant="contained" 
                             size="large" 
                             onClick={handleJoin}
+                            disabled={isLoading}
+                            startIcon={isLoading ? <CircularProgress size={18} color="inherit" /> : null}
                             sx={{ 
                                 py: 1.8, 
                                 fontWeight: 700,
                                 boxShadow: "0 4px 12px rgba(249, 115, 22, 0.2)",
                             }}
                         >
-                            Join Battle
+                            {isLoading ? "Joining..." : "Join Battle"}
                         </Button>
                     </Box>
                 </Paper>
@@ -93,4 +124,4 @@ function JoinLobby() {
     );
 }
 
-export default JoinLobby;
+export default JoinLobby;
