@@ -1,7 +1,7 @@
+import { useState, useEffect } from "react";
 import { FaLongArrowAltLeft } from "react-icons/fa";
-import Players from "./components/Players";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Players from "./components/Players";
 import Popup from "../../components/Popup";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -9,20 +9,32 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import { useCreateMatch } from "../../hooks/useCreateMatch";
 import Chip from "@mui/material/Chip";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import SpeedIcon from "@mui/icons-material/Speed";
-
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import TopicIcon from "@mui/icons-material/Topic";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import VpnKeyIcon from "@mui/icons-material/VpnKey";
+import CircularProgress from "@mui/material/CircularProgress";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+
+import { useParty } from "../../context/PartyContext";
+import { useCreateMatch } from "../../hooks/useCreateMatch";
 
 function MatchConfig() {
     const navigate = useNavigate();
+    const { currentParty, partyId, invitationCode, createLobby, isLoading: isLobbyLoading } = useParty();
+
+    const [copied, setCopied] = useState(false);
+
     const LEETCODE_TOPICS = [
         "Array", "String", "Hash Table", "Math", "Dynamic Programming",
         "Sorting", "Greedy", "Depth-First Search", "Binary Search", "Database",
@@ -36,25 +48,26 @@ function MatchConfig() {
     const [selectedTopics, setSelectedTopics] = useState([]);
     const [draftTopics, setDraftTopics] = useState([]);
     const [topicSearch, setTopicSearch] = useState("");
+
+    const [toast, setToast] = useState({ open: false, severity: "success", message: "" });
+
     const createMatchMutation = useCreateMatch(
-        () => setToast({ open: true, severity: "success", message: "Match created successfully!" }),
-        () => setToast({ open: true, severity: "error", message: "Failed to create match." })
+        () => setToast({ open: true, severity: "success", message: "Match configured and started successfully!" }),
+        (err) => setToast({ open: true, severity: "error", message: err?.message || "Failed to configure match." })
     );
 
-    //Difficulty
-    //Time
-    //Prize
-    //Topics
+    // Popups state
     const [showDiff, setShowDiff] = useState(false);
     const [showTime, setShowTime] = useState(false);
     const [showPrize, setShowPrize] = useState(false);
     const [showTopic, setShowTopic] = useState(false);
-    // "Saved" values (only change on confirm)
+
+    // Form values
     const [difficulty, setDifficulty] = useState("");
     const [matchEndDate, setMatchEndDate] = useState("");
     const [prize, setPrize] = useState("");
 
-    // "Draft" values (edited inside popups)
+    // Draft values (edited inside popups)
     const [draftDifficulty, setDraftDifficulty] = useState("");
     const [draftMatchEndDate, setDraftMatchEndDate] = useState("");
     const [draftPrize, setDraftPrize] = useState("");
@@ -64,7 +77,6 @@ function MatchConfig() {
         matchEndDate: "",
         prize: "",
     });
-    const [toast, setToast] = useState({ open: false, severity: "success", message: "" });
 
     const formatDateYYYYMMDD = (date) => {
         const y = date.getFullYear();
@@ -92,22 +104,42 @@ function MatchConfig() {
         return Math.round(ms / (1000 * 60 * 60 * 24));
     };
 
-    const buildPayloadForBackend = () => {
-        const now = new Date();
-        const startYYYYMMDD = formatDateYYYYMMDD(now);
+    // Copy to Clipboard Utility
+    const handleCopyCode = async () => {
+        const codeToCopy = invitationCode || currentParty?.invitation_code;
+        if (!codeToCopy) {
+            setToast({ open: true, severity: "warning", message: "No active invitation code to copy." });
+            return;
+        }
 
-        const startUtc = parseYYYYMMDDAsUTCDate(startYYYYMMDD);
-        const endUtc = parseYYYYMMDDAsUTCDate(matchEndDate);
-        const durationDays = diffDaysUTC(startUtc, endUtc);
+        try {
+            if (navigator?.clipboard?.writeText) {
+                await navigator.clipboard.writeText(String(codeToCopy));
+            } else {
+                // Fallback for environments where clipboard API is restricted
+                const textarea = document.createElement("textarea");
+                textarea.value = String(codeToCopy);
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textarea);
+            }
+            setCopied(true);
+            setToast({ open: true, severity: "success", message: `Invitation code ${codeToCopy} copied to clipboard!` });
+            setTimeout(() => setCopied(false), 2500);
+        } catch (e) {
+            console.error("Clipboard copy failed:", e);
+            setToast({ open: true, severity: "error", message: "Failed to copy code to clipboard." });
+        }
+    };
 
-        return {
-            difficulty,              // "Easy" | "Medium" | "Hard"
-            prize,                   // string
-            topics: selectedTopics,
-            startDate: startYYYYMMDD, // "YYYY-MM-DD"
-            endDate: matchEndDate,    // "YYYY-MM-DD"
-            durationDays,             // number (1..31)
-        };
+    const handleInitLobby = async () => {
+        try {
+            await createLobby(1);
+            setToast({ open: true, severity: "success", message: "New default party lobby initialized!" });
+        } catch {
+            // ErrorDialog handles stopping and feedback
+        }
     };
 
     const validateForm = () => {
@@ -117,7 +149,6 @@ function MatchConfig() {
             prize: prize.trim() ? "" : "Enter a prize",
         };
 
-        // Validate duration range defensively (even though the input is constrained)
         if (matchEndDate) {
             const startUtc = parseYYYYMMDDAsUTCDate(formatDateYYYYMMDD(new Date()));
             const endUtc = parseYYYYMMDDAsUTCDate(matchEndDate);
@@ -133,10 +164,17 @@ function MatchConfig() {
 
     const handleCreateMatch = () => {
         if (!validateForm()) {
-            setToast({ open: true, severity: "error", message: "Fill all required fields before creating the match." });
+            setToast({ open: true, severity: "error", message: "Fill all required fields before starting the match." });
             return;
         }
-        const payload = buildPayloadForBackend();
+
+        const payload = {
+            party_id: Number(partyId) || currentParty?.party_id || 1,
+            difficulty: difficulty.toLowerCase(), // "easy" | "medium" | "hard"
+            partyPrize: prize,
+            endTime: `${matchEndDate}T23:59:59`,
+        };
+
         createMatchMutation.mutate(payload);
     };
 
@@ -155,22 +193,142 @@ function MatchConfig() {
         setShowPrize(true);
     };
 
+    const displayCode = invitationCode || currentParty?.invitation_code || null;
+
     return (
         <Box sx={{ minHeight: "100vh", bgcolor: "background.default", color: "text.primary", py: { xs: 2, md: 4 } }}>
             <Container maxWidth="xl" sx={{ height: "100%" }}>
-                <Stack direction={{ xs: "column", sm: "row" }} alignItems={{ xs: "flex-start", sm: "center" }} spacing={1.5} sx={{ mb: 4 }}>
-                    <Button
-                        variant="outlined"
-                        onClick={() => navigate("/")}
-                        startIcon={<FaLongArrowAltLeft />}
-                        sx={{ color: "text.secondary", borderColor: "rgba(255,255,255,0.1)", borderRadius: 1 }}
+                {/* Header Action Bar */}
+                <Stack 
+                    direction={{ xs: "column", sm: "row" }} 
+                    alignItems={{ xs: "flex-start", sm: "center" }} 
+                    justifyContent="space-between"
+                    spacing={2} 
+                    sx={{ mb: 4 }}
+                >
+                    <Stack direction="row" spacing={1.5} alignItems="center">
+                        <Button
+                            variant="outlined"
+                            onClick={() => navigate("/")}
+                            startIcon={<FaLongArrowAltLeft />}
+                            sx={{ color: "text.secondary", borderColor: "rgba(255,255,255,0.1)", borderRadius: 1 }}
+                        >
+                            Back
+                        </Button>
+                        {partyId && (
+                            <Chip
+                                label={`Lobby #${partyId}`}
+                                color="primary"
+                                size="small"
+                                sx={{ fontWeight: 800, bgcolor: "rgba(249, 115, 22, 0.15)", color: "#f97316", border: "1px solid rgba(249, 115, 22, 0.3)" }}
+                            />
+                        )}
+                        <Chip
+                            label={currentParty?.party_status || "WAITING"}
+                            color="warning"
+                            size="small"
+                            variant="outlined"
+                            sx={{ fontWeight: 700, fontSize: "0.75rem" }}
+                        />
+                    </Stack>
+
+                    {/* Sharable Invitation Code Widget with Copy to Clipboard Utility */}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1.5,
+                            bgcolor: "#383434",
+                            px: 2,
+                            py: 1,
+                            borderRadius: 2,
+                            border: "1px solid rgba(249, 115, 22, 0.3)",
+                            boxShadow: "0 2px 10px rgba(0,0,0,0.3)",
+                        }}
                     >
-                        Back
-                    </Button>
-                    <Typography variant="body2" color="text.secondary" sx={{ ml: { xs: 0, sm: "auto" }, mt: { xs: 1.5, sm: 0 }, fontFamily: "monospace" }}>
-                        Invite Code: <span style={{ color: "#f97316" }}>ARENA-9283</span>
-                    </Typography>
+                        <VpnKeyIcon sx={{ color: "#f97316", fontSize: 18 }} />
+                        <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                            Invite Code:
+                        </Typography>
+
+                        {displayCode ? (
+                            <Typography
+                                component="span"
+                                sx={{
+                                    fontFamily: "monospace",
+                                    fontWeight: 800,
+                                    fontSize: "1.05rem",
+                                    color: "#f97316",
+                                    letterSpacing: 1.5,
+                                    bgcolor: "rgba(249, 115, 22, 0.1)",
+                                    px: 1.2,
+                                    py: 0.2,
+                                    borderRadius: 1,
+                                }}
+                            >
+                                {displayCode}
+                            </Typography>
+                        ) : (
+                            <Typography component="span" variant="body2" sx={{ color: "text.disabled", fontStyle: "italic" }}>
+                                Not generated
+                            </Typography>
+                        )}
+
+                        <Tooltip title={copied ? "Copied to clipboard!" : "Copy code to share"} arrow>
+                            <IconButton
+                                size="small"
+                                onClick={handleCopyCode}
+                                disabled={!displayCode}
+                                sx={{
+                                    color: copied ? "success.main" : "#f97316",
+                                    bgcolor: copied ? "rgba(34, 197, 94, 0.15)" : "rgba(249, 115, 22, 0.15)",
+                                    "&:hover": {
+                                        bgcolor: copied ? "rgba(34, 197, 94, 0.25)" : "rgba(249, 115, 22, 0.3)",
+                                    },
+                                    transition: "all 0.2s",
+                                }}
+                            >
+                                {copied ? <CheckCircleOutlineIcon fontSize="small" /> : <ContentCopyIcon fontSize="small" />}
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
                 </Stack>
+
+                {/* Notice if no party session exists */}
+                {!partyId && (
+                    <Paper
+                        sx={{
+                            p: 2.5,
+                            mb: 3,
+                            bgcolor: "rgba(249, 115, 22, 0.08)",
+                            border: "1px solid rgba(249, 115, 22, 0.3)",
+                            display: "flex",
+                            flexDirection: { xs: "column", sm: "row" },
+                            alignItems: { xs: "flex-start", sm: "center" },
+                            justifyContent: "space-between",
+                            gap: 2,
+                        }}
+                    >
+                        <Box>
+                            <Typography variant="subtitle1" sx={{ fontWeight: 800, color: "#f97316" }}>
+                                No Active Lobby Session Detected
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                Initialize a default party session to get your sharable invitation code and connect with players.
+                            </Typography>
+                        </Box>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleInitLobby}
+                            disabled={isLobbyLoading}
+                            startIcon={isLobbyLoading ? <CircularProgress size={16} color="inherit" /> : <AddCircleOutlineIcon />}
+                            sx={{ fontWeight: 700, whiteSpace: "nowrap" }}
+                        >
+                            {isLobbyLoading ? "Initializing..." : "Initialize Default Lobby"}
+                        </Button>
+                    </Paper>
+                )}
 
                 <Grid container spacing={4} alignItems="flex-start">
                     {/* Left Form Panel */}
@@ -180,7 +338,7 @@ function MatchConfig() {
                                 Lobby Configuration
                             </Typography>
                             <Typography variant="body2" color="text.secondary" sx={{ mb: 4, textAlign: "left" }}>
-                                Define the parameters for the arena lobby to start the contest.
+                                Define the parameters for the arena lobby to start the contest with your participants.
                             </Typography>
 
                             <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, gap: 3, mb: 4 }}>
@@ -395,7 +553,7 @@ function MatchConfig() {
                                                         clickable
                                                         color={draftTopics.includes(topic) ? "primary" : "default"}
                                                         onClick={() => {
-                                                            setDraftTopics(prev =>
+                                                             setDraftTopics(prev =>
                                                                 prev.includes(topic)
                                                                     ? prev.filter(t => t !== topic)
                                                                     : [...prev, topic]
@@ -433,6 +591,7 @@ function MatchConfig() {
                                     size="large"
                                     variant="contained"
                                     onClick={handleCreateMatch}
+                                    disabled={createMatchMutation.isPending}
                                     sx={{
                                         px: 6,
                                         py: 2,
@@ -441,7 +600,7 @@ function MatchConfig() {
                                         fontWeight: 700
                                     }}
                                 >
-                                    Create Arena Lobby
+                                    {createMatchMutation.isPending ? "Starting Match..." : "Start Arena Contest"}
                                 </Button>
                             </Stack>
                         </Paper>
@@ -449,14 +608,14 @@ function MatchConfig() {
 
                     {/* Right Players Panel */}
                     <Grid size={{ xs: 12, md: 5, lg: 4 }}>
-                        <Players />
+                        <Players initialPlayers={currentParty?.players} />
                     </Grid>
                 </Grid>
             </Container>
 
             <Snackbar
                 open={toast.open}
-                autoHideDuration={3000}
+                autoHideDuration={3500}
                 onClose={() => setToast((t) => ({ ...t, open: false }))}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
@@ -474,4 +633,3 @@ function MatchConfig() {
 }
 
 export default MatchConfig;
-

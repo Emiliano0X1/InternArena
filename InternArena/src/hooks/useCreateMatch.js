@@ -1,24 +1,20 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { completeParty } from "../services/partyService";
 
 export const useCreateMatch = (onSuccess, onError) => {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async (payload) => {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/match`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-            });
-            if (!response.ok) throw new Error("Failed to create match");
-            return response.json();
+            return await completeParty(payload);
         },
-        onSuccess: () => {
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ["party"] });
             queryClient.invalidateQueries({ queryKey: ["rankings"] });
-            onSuccess?.();
+            onSuccess?.(data);
         },
-        onError: () => {
-            onError?.();
+        onError: (err) => {
+            onError?.(err);
         },
     });
 };

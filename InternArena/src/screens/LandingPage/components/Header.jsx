@@ -9,18 +9,32 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Drawer from "@mui/material/Drawer";
+import CircularProgress from "@mui/material/CircularProgress";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { useParty } from '../../../context/PartyContext';
 
 function Header() {
     const navigate = useNavigate();
     const location = useLocation();
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const { createLobby, isLoading } = useParty();
 
     const isActive = (path) => location.pathname === path;
 
+    const handleCreateLobbyClick = async () => {
+        try {
+            await createLobby(1);
+            navigate("/match");
+        } catch {
+            // Error handling & modal display handled inside PartyContext.
+            // Redirection is prevented.
+        }
+    };
+
     const navItems = [
-        { label: "Create Lobby", path: "/match" },
+        { label: "Create Lobby", action: handleCreateLobbyClick, isAction: true },
         { label: "Join Lobby", path: "/join" },
         { label: "Shop", path: "/store" },
         { label: "Log In", path: "/login", primary: true },
@@ -86,12 +100,19 @@ function Header() {
                 >
                     <Button 
                         variant={isActive("/match") ? "contained" : "outlined"} 
-                        onClick={() => navigate("/match")}
+                        onClick={handleCreateLobbyClick}
+                        disabled={isLoading}
+                        startIcon={isLoading ? <CircularProgress size={16} color="inherit" /> : <AddCircleOutlineIcon />}
                         sx={{
                             px: 3,
+                            borderColor: "rgba(249, 115, 22, 0.4)",
+                            "&:hover": {
+                                borderColor: "#f97316",
+                                backgroundColor: "rgba(249, 115, 22, 0.08)",
+                            }
                         }}
                     >
-                        Create Lobby
+                        {isLoading ? "Creating..." : "Create Lobby"}
                     </Button>
                     <Button 
                         variant={isActive("/join") ? "contained" : "outlined"} 
@@ -163,21 +184,27 @@ function Header() {
                         {navItems.map((item) => (
                             <Button
                                 key={item.label}
-                                variant={item.primary ? "contained" : (isActive(item.path) ? "contained" : "outlined")}
+                                variant={item.primary ? "contained" : (item.path && isActive(item.path) ? "contained" : "outlined")}
                                 color={item.primary ? "primary" : "inherit"}
-                                onClick={() => {
-                                    navigate(item.path);
-                                    setDrawerOpen(false);
+                                disabled={item.isAction && isLoading}
+                                onClick={async () => {
+                                    if (item.isAction) {
+                                        setDrawerOpen(false);
+                                        await item.action();
+                                    } else {
+                                        navigate(item.path);
+                                        setDrawerOpen(false);
+                                    }
                                 }}
                                 sx={{
                                     py: 1.5,
                                     fontSize: "1rem",
                                     fontWeight: 700,
-                                    borderColor: item.primary ? "none" : (isActive(item.path) ? "none" : "rgba(255, 255, 255, 0.1)"),
+                                    borderColor: item.primary ? "none" : (item.path && isActive(item.path) ? "none" : "rgba(255, 255, 255, 0.1)"),
                                     boxShadow: item.primary ? "0 4px 12px rgba(249, 115, 22, 0.2)" : "none"
                                 }}
                             >
-                                {item.label}
+                                {item.isAction && isLoading ? "Creating..." : item.label}
                             </Button>
                         ))}
                     </Stack>
@@ -187,4 +214,4 @@ function Header() {
     );
 }
 
-export default Header;
+export default Header;
