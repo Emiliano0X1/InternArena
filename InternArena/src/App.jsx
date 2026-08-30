@@ -20,7 +20,7 @@ function GlobalErrorDialog() {
             onClose={closeErrorDialog}
             onRetry={() => {
                 closeErrorDialog();
-                createLobby(1).catch(() => {});
+                createLobby().catch(() => {});
             }}
         />
     );

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { createPartyDefault, getPartyById } from "../services/partyService";
+import { DEFAULT_ADMIN_ID } from "../constants/party";
 import {
     savePartySession,
     getStoredPartyId,
@@ -32,7 +33,7 @@ export const PartyProvider = ({ children }) => {
      * Initializes default party session via POST /api/v1/partys/create?admin_id={adminId}
      * Returns the created party on success, or throws error and opens ErrorDialog on failure.
      */
-    const createLobby = useCallback(async (adminId = 1) => {
+    const createLobby = useCallback(async (adminId = DEFAULT_ADMIN_ID) => {
         setIsLoading(true);
         try {
             const party = await createPartyDefault(adminId);

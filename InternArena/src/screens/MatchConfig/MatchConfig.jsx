@@ -135,7 +135,7 @@ function MatchConfig() {
 
     const handleInitLobby = async () => {
         try {
-            await createLobby(1);
+            await createLobby();
             setToast({ open: true, severity: "success", message: "New default party lobby initialized!" });
         } catch {
             // ErrorDialog handles stopping and feedback

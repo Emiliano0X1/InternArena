@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import GroupIcon from "@mui/icons-material/Group";
 import Paper from "@mui/material/Paper";
 import PropTypes from "prop-types";
+import { DEFAULT_HOST_ID, DEFAULT_HOST_NAME } from "../../../constants/party";
 
 function Players({ initialPlayers = [] }) {
     const [players, setPlayers] = useState([]);
@@ -20,7 +21,7 @@ function Players({ initialPlayers = [] }) {
             );
         } else {
             setPlayers([
-                { id: 1, name: "Admin Host (You)" }
+                { id: DEFAULT_HOST_ID, name: DEFAULT_HOST_NAME }
             ]);
         }
     }, [initialPlayers]);

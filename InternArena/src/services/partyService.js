@@ -1,4 +1,5 @@
 import apiClient from "./api";
+import { DEFAULT_ADMIN_ID } from "../constants/party";
 
 /**
  * Party Service - API integration based on endpoints_reference.md
@@ -8,10 +9,10 @@ import apiClient from "./api";
  * 1.3. Crear sala inicial (Lobby en espera)
  * POST /api/v1/partys/create?admin_id={admin_id}
  * 
- * @param {number|string} adminId - ID of the admin user (defaults to 1)
+ * @param {number|string} adminId - ID of the admin user
  * @returns {Promise<Object>} Created Party object with party_id, invitation_code, party_status="WAITING", etc.
  */
-export const createPartyDefault = async (adminId = 1) => {
+export const createPartyDefault = async (adminId = DEFAULT_ADMIN_ID) => {
     const response = await apiClient.post("/api/v1/partys/create", null, {
         params: { admin_id: adminId }
     });
