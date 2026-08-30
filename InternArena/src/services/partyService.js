@@ -42,8 +42,13 @@ export const getAllParties = async () => {
 /**
  * 1.4. Unir nuevo jugador a una sala mediante código de invitación
  * POST /api/v1/partys/completeParty/newPlayer?user_id={user_id}&invitation_code={invitation_code}
+ * 
+ * @param {Object} payload
+ * @param {number|string} payload.userId - ID of the joining user
+ * @param {string} payload.invitationCode - 6-digit party invitation code
+ * @returns {Promise<Object>} Updated Party object with new player in players list
  */
-export const joinPartyByCode = async (userId, invitationCode) => {
+export const addNewPlayerToWaitingParty = async ({ userId, invitationCode }) => {
     const response = await apiClient.post("/api/v1/partys/completeParty/newPlayer", null, {
         params: {
             user_id: userId,
@@ -52,6 +57,10 @@ export const joinPartyByCode = async (userId, invitationCode) => {
     });
     return response.data;
 };
+
+// Backward-compatibility alias
+export const joinPartyByCode = (userId, invitationCode) =>
+    addNewPlayerToWaitingParty({ userId, invitationCode });
 
 /**
  * 1.5. Iniciar partida y generar problemas (completeParty)
@@ -67,6 +76,7 @@ export default {
     createPartyDefault,
     getPartyById,
     getAllParties,
+    addNewPlayerToWaitingParty,
     joinPartyByCode,
     completeParty
 };

@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
-import { createPartyDefault, getPartyById } from "../services/partyService";
+import { createPartyDefault, getPartyById, addNewPlayerToWaitingParty } from "../services/partyService";
 import {
     savePartySession,
     getStoredPartyId,
@@ -13,6 +13,7 @@ const PartyContext = createContext(null);
 export const PartyProvider = ({ children }) => {
     const [currentParty, setCurrentParty] = useState(() => getStoredPartySession());
     const [partyId, setPartyId] = useState(() => getStoredPartyId());
+    const [guestUserId, setGuestUserId] = useState(() => sessionStorage.getItem("internarena_user_id") || "2");
     const [isLoading, setIsLoading] = useState(false);
     const [errorDialog, setErrorDialog] = useState({
         open: false,
@@ -30,7 +31,6 @@ export const PartyProvider = ({ children }) => {
 
     /**
      * Initializes default party session via POST /api/v1/partys/create?admin_id={adminId}
-     * Returns the created party on success, or throws error and opens ErrorDialog on failure.
      */
     const createLobby = useCallback(async (adminId = 1) => {
         setIsLoading(true);
@@ -53,6 +53,39 @@ export const PartyProvider = ({ children }) => {
             setErrorDialog({
                 open: true,
                 title: "Failed to Create Lobby",
+                message,
+                status,
+            });
+            throw err;
+        }
+    }, []);
+
+    /**
+     * Guest joins waiting party via POST /api/v1/partys/completeParty/newPlayer?user_id={userId}&invitation_code={invitationCode}
+     */
+    const joinLobby = useCallback(async ({ userId, invitationCode }) => {
+        setIsLoading(true);
+        try {
+            const party = await addNewPlayerToWaitingParty({ userId, invitationCode });
+            setCurrentParty(party);
+            if (party?.party_id) {
+                setPartyId(String(party.party_id));
+            }
+            setGuestUserId(String(userId));
+            sessionStorage.setItem("internarena_user_id", String(userId));
+            savePartySession(party);
+            setIsLoading(false);
+            return party;
+        } catch (err) {
+            setIsLoading(false);
+            const status = err.status || (err.originalError?.response?.status ?? null);
+            const message =
+                err.message ||
+                `The party with invitation code "${invitationCode}" could not be joined. Please verify the code.`;
+
+            setErrorDialog({
+                open: true,
+                title: "Failed to Join Lobby",
                 message,
                 status,
             });
@@ -90,10 +123,12 @@ export const PartyProvider = ({ children }) => {
     const value = {
         currentParty,
         partyId,
+        guestUserId,
         invitationCode: currentParty?.invitation_code || null,
         isLoading,
         errorDialog,
         createLobby,
+        joinLobby,
         refreshParty,
         clearParty,
         closeErrorDialog,
