@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import GroupIcon from "@mui/icons-material/Group";
 import Paper from "@mui/material/Paper";
 import PropTypes from "prop-types";
+import { DEFAULT_HOST_ID, DEFAULT_HOST_NAME } from "../../../constants/party";
 
 import { deletePlayer } from "../../../services/playerService";
 

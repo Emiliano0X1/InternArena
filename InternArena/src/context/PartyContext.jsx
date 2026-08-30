@@ -8,6 +8,7 @@ import {
     leaveActiveParty,
     leavePartyAsPlayer,
 } from "../services/partyService";
+import { DEFAULT_ADMIN_ID } from "../constants/party";
 import {
     savePartySession,
     getStoredPartyId,
@@ -42,7 +43,7 @@ export const PartyProvider = ({ children }) => {
     /**
      * Initializes default party session via POST /api/v1/partys/create?admin_id={adminId}
      */
-    const createLobby = useCallback(async (adminId = 1) => {
+    const createLobby = useCallback(async (adminId = DEFAULT_ADMIN_ID) => {
         setIsLoading(true);
         try {
             const party = await createPartyDefault(adminId);

@@ -25,7 +25,7 @@ function Header() {
 
     const handleCreateLobbyClick = async () => {
         try {
-            await createLobby(1);
+            await createLobby();
             navigate("/match");
         } catch {
             // Error handling & modal display handled inside PartyContext.
