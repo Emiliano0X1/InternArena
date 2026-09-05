@@ -6,6 +6,7 @@ import Register from "./screens/Register/Register";
 import MatchPage from "./screens/MatchPage/MatchPage";
 import StoreView from "./screens/Store/Store";
 import JoinLobby from "./screens/JoinLobby/JoinLobby";
+import GuestWaitingRoom from "./screens/GuestWaitingRoom/GuestWaitingRoom";
 import { PartyProvider, useParty } from "./context/PartyContext";
 import ErrorDialog from "./components/ErrorDialog";
 
@@ -38,6 +39,8 @@ function App() {
                 <Route path="/matchpage" element={<MatchPage />} />
                 <Route path="/store" element={<StoreView />} />
                 <Route path="/join" element={<JoinLobby />} />
+                <Route path="/guest-room" element={<GuestWaitingRoom />} />
+                <Route path="/waiting-room" element={<GuestWaitingRoom />} />
             </Routes>
         </PartyProvider>
     );

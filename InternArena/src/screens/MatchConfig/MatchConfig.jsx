@@ -31,9 +31,20 @@ import { useCreateMatch } from "../../hooks/useCreateMatch";
 
 function MatchConfig() {
     const navigate = useNavigate();
-    const { currentParty, partyId, invitationCode, createLobby, isLoading: isLobbyLoading } = useParty();
+    const { currentParty, partyId, invitationCode, createLobby, refreshParty, isLoading: isLobbyLoading } = useParty();
 
     const [copied, setCopied] = useState(false);
+
+    // Auto-polling interval to keep joined and leaving players updated in real-time
+    useEffect(() => {
+        if (!partyId) return;
+
+        const interval = setInterval(async () => {
+            await refreshParty(partyId);
+        }, 2500);
+
+        return () => clearInterval(interval);
+    }, [partyId, refreshParty]);
 
     const LEETCODE_TOPICS = [
         "Array", "String", "Hash Table", "Math", "Dynamic Programming",
@@ -608,7 +619,10 @@ function MatchConfig() {
 
                     {/* Right Players Panel */}
                     <Grid size={{ xs: 12, md: 5, lg: 4 }}>
-                        <Players initialPlayers={currentParty?.players} />
+                        <Players
+                            initialPlayers={currentParty?.players || []}
+                            onPlayerRemoved={() => partyId && refreshParty(partyId)}
+                        />
                     </Grid>
                 </Grid>
             </Container>

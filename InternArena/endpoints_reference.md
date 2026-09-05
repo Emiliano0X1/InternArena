@@ -95,6 +95,19 @@ Controlador: `PartyController.java` | **Base Path**: `/api/v1/partys`
 - **Parámetros Path**: `id` (Integer)
 - **Respuesta `204 No Content`**
 
+### 1.8. Salir de una partida en curso (Leave Active Party)
+- **Método**: `POST`
+- **Ruta**: `/api/v1/partys/{id}/leave`
+- **Parámetros**:
+  - Path: `id` (Integer, ID de la partida)
+  - Query: `user_id` (Integer, ID del usuario que sale)
+- **Ruta Alternativa**: `POST /api/v1/partys/leave?party_id={party_id}&user_id={user_id}`
+- **Comportamiento**:
+  - Si sale el anfitrión (host), la partida se marca como finalizada (`ENDED`).
+  - Si sale un jugador regular y quedan $\ge 2$ jugadores, la partida continúa activa (`ACTIVE`).
+- **Respuesta `200 OK`**: Objeto `Party` con el estado actualizado.
+- **Respuesta `400 Bad Request`**: `{"error": "user_id is required"}`
+
 ---
 
 ## 2. 👤 Usuarios (`User`)
