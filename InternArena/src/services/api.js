@@ -11,9 +11,13 @@ export const apiClient = axios.create({
 	timeout: 10000,
 });
 
-// Add Supabase JWT to every request
+// Add Supabase JWT to requests unless skipAuth is explicitly set
 apiClient.interceptors.request.use(
 	async (config) => {
+		if (config.skipAuth) {
+			return config;
+		}
+
 		const {
 			data: { session },
 		} = await supabase.auth.getSession();

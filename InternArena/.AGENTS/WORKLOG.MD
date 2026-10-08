@@ -27,6 +27,27 @@ This document maintains a chronological record of all development sessions, task
 
 ## Session History
 
+### Session - 2026-10-07 - Registration Flow & User Service Integration
+- **Goal**: Implement complete user registration pipeline linking Supabase Auth with the Spring Boot backend profile service.
+- **Completed**:
+  - [x] Implemented `userService.js` handling `/api/v1/users` endpoints (`checkLeetcodeUsername`, `registerUserProfile`, `getCurrentUser`, `getAllUsers`, `getUserById`, `updateUser`, `deleteUser`).
+  - [x] Extended `authService.js` with `signUp` and `signOut` methods using Supabase client.
+  - [x] Added `skipAuth` flag support to `apiClient` request interceptor for unauthenticated public requests.
+  - [x] Created custom TanStack Query hooks `useCheckUsername.js` and `useRegister.js`.
+  - [x] Modularized and refactored `Register.jsx` to satisfy the 200-line rule into `RegisterForm.jsx` and `LeetcodeUsernameInput.jsx`.
+  - [x] Implemented real-time async username validation indicator and form state handling.
+- **In Progress**:
+  - [ ] Standardizing custom TanStack Query hooks for `MatchPage` real-time sync.
+- **Key Decisions & Architecture**:
+  - Orchestrated Supabase authentication sign-up immediately followed by backend profile linking in `useRegister`.
+  - Enabled optional `skipAuth` config on Axios client to allow pre-auth checks without triggering Supabase session lookups.
+  - Adhered strictly to the 200-line modularity rule with dedicated subcomponents in `src/screens/Register/components/`.
+- **Blockers / Known Issues**:
+  - None.
+- **Next Steps**:
+  1. Implement Player Stats view (`/stats`) following design system specifications.
+  2. Enhance live match state synchronization on `MatchPage`.
+
 ### Session - 2026-09-27 - Project Architecture & Agent Setup
 - **Goal**: Standardize agent guidelines, review repository architecture, and establish development worklog.
 - **Completed**:

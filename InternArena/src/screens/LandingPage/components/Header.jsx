@@ -14,12 +14,14 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useParty } from '../../../context/PartyContext';
+import { useAuth } from '../../../context/AuthContext';
 
 function Header() {
     const navigate = useNavigate();
     const location = useLocation();
     const [drawerOpen, setDrawerOpen] = useState(false);
     const { createLobby, isLoading } = useParty();
+    const { isAuthenticated, signOut } = useAuth();
 
     const isActive = (path) => location.pathname === path;
 
@@ -33,11 +35,24 @@ function Header() {
         }
     };
 
+    const handleAuthAction = async () => {
+        if (isAuthenticated) {
+            await signOut();
+        } else {
+            navigate("/login");
+        }
+    };
+
     const navItems = [
         { label: "Create Lobby", action: handleCreateLobbyClick, isAction: true },
         { label: "Join Lobby", path: "/join" },
         { label: "Shop", path: "/store" },
-        { label: "Log In", path: "/login", primary: true },
+        { 
+            label: isAuthenticated ? "Sign Out" : "Log In", 
+            action: handleAuthAction, 
+            isAction: true, 
+            primary: !isAuthenticated 
+        },
     ];
 
     return (
@@ -133,15 +148,16 @@ function Header() {
                         Shop
                     </Button>
                     <Button 
-                        variant="contained" 
-                        color="primary"
-                        onClick={() => navigate("/login")}
+                        variant={isAuthenticated ? "outlined" : "contained"} 
+                        color={isAuthenticated ? "inherit" : "primary"}
+                        onClick={handleAuthAction}
                         sx={{
                             px: 3,
-                            boxShadow: "0 4px 12px rgba(249, 115, 22, 0.2)",
+                            borderColor: isAuthenticated ? "rgba(255, 255, 255, 0.2)" : "none",
+                            boxShadow: isAuthenticated ? "none" : "0 4px 12px rgba(249, 115, 22, 0.2)",
                         }}
                     >
-                        Log In
+                        {isAuthenticated ? "Sign Out" : "Log In"}
                     </Button>
                 </Stack>
 

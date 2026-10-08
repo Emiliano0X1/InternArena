@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { login } from "../../services/authService";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "motion/react";
@@ -8,6 +9,7 @@ import Carousel from "../../components/Carousel";
 
 function Login() {
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 
 	//Auth states
 	const [email, setEmail] = useState("");
@@ -21,13 +23,12 @@ function Login() {
 			setError("");
 
 			const data = await login(email, password);
-
 			console.log("Login successful:", data);
 
+			await queryClient.invalidateQueries({ queryKey: ["currentUser"] });
 			navigate("/");
 		} catch (error) {
 			console.error("Login failed:", error);
-
 			setError(error.message || "Unable to log in");
 		} finally {
 			setLoading(false);

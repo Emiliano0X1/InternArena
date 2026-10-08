@@ -8,6 +8,7 @@ import StoreView from "./screens/Store/Store";
 import JoinLobby from "./screens/JoinLobby/JoinLobby";
 import GuestWaitingRoom from "./screens/GuestWaitingRoom/GuestWaitingRoom";
 import { PartyProvider, useParty } from "./context/PartyContext";
+import { AuthProvider } from "./context/AuthContext";
 import ErrorDialog from "./components/ErrorDialog";
 
 function GlobalErrorDialog() {
@@ -29,20 +30,22 @@ function GlobalErrorDialog() {
 
 function App() {
     return (
-        <PartyProvider>
-            <GlobalErrorDialog />
-            <Routes>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/match" element={<MatchConfig />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/matchpage" element={<MatchPage />} />
-                <Route path="/store" element={<StoreView />} />
-                <Route path="/join" element={<JoinLobby />} />
-                <Route path="/guest-room" element={<GuestWaitingRoom />} />
-                <Route path="/waiting-room" element={<GuestWaitingRoom />} />
-            </Routes>
-        </PartyProvider>
+        <AuthProvider>
+            <PartyProvider>
+                <GlobalErrorDialog />
+                <Routes>
+                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/match" element={<MatchConfig />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/matchpage" element={<MatchPage />} />
+                    <Route path="/store" element={<StoreView />} />
+                    <Route path="/join" element={<JoinLobby />} />
+                    <Route path="/guest-room" element={<GuestWaitingRoom />} />
+                    <Route path="/waiting-room" element={<GuestWaitingRoom />} />
+                </Routes>
+            </PartyProvider>
+        </AuthProvider>
     );
 }
 
