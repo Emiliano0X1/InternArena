@@ -27,6 +27,24 @@ This document maintains a chronological record of all development sessions, task
 
 ## Session History
 
+### Session - 2026-10-24 - Inventory Tab & Live Profile Customization
+- **Goal**: Implement split-view Inventory screen with real-time Live Profile Preview, cosmetic item selector, real-life redeemables tab, and cosmetic persistence.
+- **Completed**:
+  - [x] Designed and created `Inventory.jsx` adhering strictly to the two-column layout and the 200-line modularity rule.
+  - [x] Implemented `LiveProfilePreview.jsx` reflecting real-time updates for equipped banners, titles/tags, and up to 3 badges with tooltips.
+  - [x] Built `CosmeticsTab.jsx` with category filters (Banners, Titles, Badges) and equip toggles.
+  - [x] Implemented `RedeemablesTab.jsx` for physical merchandise tracking, status pills (`READY_TO_CLAIM`, `PROCESSING`, `SHIPPED`, `CLAIMED`), and one-click copyable redemption codes.
+  - [x] Created `InventoryHeader.jsx` with tab switcher and reactive "Save Changes" action button.
+  - [x] Implemented `inventoryService.js` and `useInventory.js` with TanStack Query mutation connecting to backend `updateUser` and client storage.
+  - [x] Connected `/inventory` route in `App.jsx`, added navigation links in `Header.jsx` and `Store.jsx`, and integrated equipped cosmetics into `useCurrentUser.js` and `SideProfile.jsx`.
+- **In Progress**:
+  - [ ] Standardizing custom TanStack Query hooks for `MatchPage` real-time sync.
+- **Key Decisions & Architecture**:
+  - Separated concerns: `inventoryService` -> `useInventory` hook -> Modular screen components (<200 lines each).
+  - Maintained optimistic draft state allowing instant visual preview before triggering backend persistence.
+- **Blockers / Known Issues**:
+  - None.
+
 ### Session - 2026-10-07 - Registration Flow & User Service Integration
 - **Goal**: Implement complete user registration pipeline linking Supabase Auth with the Spring Boot backend profile service.
 - **Completed**:
