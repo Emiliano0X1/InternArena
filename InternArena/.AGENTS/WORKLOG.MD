@@ -27,6 +27,23 @@ This document maintains a chronological record of all development sessions, task
 
 ## Session History
 
+### Session - 2026-10-24 - Public Profile View & Match Activity Feed
+- **Goal**: Implement publicly accessible player profile view displaying equipped cosmetics, competitive stats widget, and paginated match activity feed.
+- **Completed**:
+  - [x] Designed and created `PublicProfile.jsx` adhering to the 200-line modularity rule (<90 lines).
+  - [x] Built `ProfileBannerHeader.jsx` displaying equipped banners, avatar, custom title tags, and equipped badges row with tooltips.
+  - [x] Implemented `UserStatsWidget.jsx` showcasing Grandmaster tier, ladder rating (ELO), win rate %, recent match streak indicators, problem category progress bars, and LeetCoin trophies.
+  - [x] Built `ActivityFeed.jsx` and `ActivityPostCard.jsx` with category filters (Recaps, Logs) and responsive pagination controls (Next/Prev/Page numbers).
+  - [x] Created `profileService.js` and `usePublicProfile.js` with TanStack Query fetching profile details and paginated match posts.
+  - [x] Registered `/profile/:id` and `/profile` routes in `App.jsx`, and linked user avatars and names in `SideProfile.jsx` and `PostHeader.jsx` directly to the public profile view.
+- **In Progress**:
+  - [ ] Standardizing custom TanStack Query hooks for `MatchPage` real-time sync.
+- **Key Decisions & Architecture**:
+  - Maintained separation of concerns: `profileService` -> `usePublicProfile` -> Modular components (<180 lines each).
+  - Supported dual route parameters: `/profile/:id` and `/profile` fallback.
+- **Blockers / Known Issues**:
+  - None.
+
 ### Session - 2026-10-24 - Inventory Tab & Live Profile Customization
 - **Goal**: Implement split-view Inventory screen with real-time Live Profile Preview, cosmetic item selector, real-life redeemables tab, and cosmetic persistence.
 - **Completed**:

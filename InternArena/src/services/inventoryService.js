@@ -1,6 +1,7 @@
 import apiClient from "./api";
 import { updateUser } from "./userService";
 import profilebanner from "../assets/profilebanner.png";
+import bannermatrix from "../assets/bannermatrix.jpg";
 import joeswag from "../assets/joeswag.png";
 
 export const DEFAULT_EQUIPPED_COSMETICS = {
@@ -31,7 +32,7 @@ export const DIGITAL_COSMETICS = [
         type: "banner",
         name: "Inferno Blaze",
         description: "Fiery orange embers forged in competitive contests.",
-        image: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=800&auto=format&fit=crop&q=80",
+        image: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=1600&h=450&q=85",
         previewGradient: "linear-gradient(135deg, #ea580c 0%, #7c2d12 50%, #1c1917 100%)",
         rarity: "Mythic",
         rarityColor: "#f97316",
@@ -41,7 +42,7 @@ export const DIGITAL_COSMETICS = [
         type: "banner",
         name: "Cyber Neon Grid",
         description: "Luminescent violet and cyan synthwave grid.",
-        image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=80",
+        image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1600&h=450&q=85",
         previewGradient: "linear-gradient(135deg, #7c3aed 0%, #2563eb 50%, #09090b 100%)",
         rarity: "Legendary",
         rarityColor: "#a855f7",
@@ -51,7 +52,7 @@ export const DIGITAL_COSMETICS = [
         type: "banner",
         name: "Terminal Matrix",
         description: "Cascading digital green code streams.",
-        image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=80",
+        image: bannermatrix,
         previewGradient: "linear-gradient(135deg, #059669 0%, #064e3b 50%, #022c22 100%)",
         rarity: "Rare",
         rarityColor: "#10b981",
@@ -61,7 +62,7 @@ export const DIGITAL_COSMETICS = [
         type: "banner",
         name: "Golden Obsidian",
         description: "Polished obsidian glass laced with radiant gold filaments.",
-        image: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&auto=format&fit=crop&q=80",
+        image: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1600&h=450&q=85",
         previewGradient: "linear-gradient(135deg, #eab308 0%, #854d0e 50%, #18181b 100%)",
         rarity: "Legendary",
         rarityColor: "#eab308",
@@ -228,7 +229,11 @@ export const getEquippedCosmetics = () => {
     try {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
-            return { ...DEFAULT_EQUIPPED_COSMETICS, ...JSON.parse(stored) };
+            const parsed = JSON.parse(stored);
+            if (parsed.bannerId === "banner-matrix" || parsed.bannerUrl?.includes("526374965328")) {
+                parsed.bannerUrl = bannermatrix;
+            }
+            return { ...DEFAULT_EQUIPPED_COSMETICS, ...parsed };
         }
     } catch (e) {
         console.warn("Failed to load cosmetics from local storage:", e);

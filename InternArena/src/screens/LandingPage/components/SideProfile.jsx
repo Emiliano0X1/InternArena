@@ -35,14 +35,18 @@ function SideProfile() {
 
 			<div className="flex flex-col items-center px-6 pb-6">
 				{/* Avatar with fallback and online indicator */}
-				<div className="relative -mt-14 mb-3">
+				<div 
+					className="relative -mt-14 mb-3 cursor-pointer group"
+					onClick={() => navigate("/profile")}
+					title="View Public Profile"
+				>
 					<img
 						src={displayAvatar}
 						alt="Profile Picture"
 						onError={(e) => {
 							e.currentTarget.src = joeswag;
 						}}
-						className="w-24 h-24 rounded-full border-4 border-[#383434] object-cover shadow-lg bg-[#282424]"
+						className="w-24 h-24 rounded-full border-4 border-[#383434] object-cover shadow-lg bg-[#282424] group-hover:border-orange-500 transition-colors"
 					/>
 					<div
 						className={`absolute bottom-1.5 right-1.5 w-4 h-4 rounded-full border-2 border-[#383434] ${
@@ -53,7 +57,10 @@ function SideProfile() {
 				</div>
 
 				{/* User Identification */}
-				<h3 className="text-xl font-bold text-gray-100 truncate max-w-full text-center">
+				<h3 
+					onClick={() => navigate("/profile")}
+					className="text-xl font-bold text-gray-100 truncate max-w-full text-center cursor-pointer hover:text-orange-400 transition-colors"
+				>
 					{isLoading ? "Loading..." : displayUsername}
 				</h3>
 				{profile.equippedTag ? (

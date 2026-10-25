@@ -40,7 +40,7 @@ function LiveProfilePreview({ draft, hasUnsavedChanges, onReset, profile, digita
             }}
         >
             {/* Banner Section with Live Updating Visuals */}
-            <Box sx={{ position: "relative", height: 130, width: "100%", overflow: "hidden" }}>
+            <Box sx={{ position: "relative", height: 145, width: "100%", overflow: "hidden", bgcolor: "#171515" }}>
                 <motion.div
                     key={draft.bannerUrl}
                     initial={{ opacity: 0.6, scale: 1.05 }}
@@ -56,10 +56,23 @@ function LiveProfilePreview({ draft, hasUnsavedChanges, onReset, profile, digita
                             width: "100%",
                             height: "100%",
                             objectFit: "cover",
-                            filter: "brightness(0.85)",
+                            objectPosition: "center",
+                            filter: "brightness(0.9)",
+                            display: "block",
                         }}
                     />
                 </motion.div>
+
+                {/* Subtle bottom gradient to blend into card */}
+                <Box
+                    sx={{
+                        position: "absolute",
+                        inset: 0,
+                        background:
+                            "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(36,32,32,0.1) 40%, rgba(36,32,32,0.9) 100%)",
+                        pointerEvents: "none",
+                    }}
+                />
 
                 {/* Unsaved Preview indicator */}
                 {hasUnsavedChanges && (
