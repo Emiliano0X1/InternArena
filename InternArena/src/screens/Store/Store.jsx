@@ -33,9 +33,19 @@ const StoreView = () => {
           >
             Back
           </Button>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1, bgcolor: "rgba(249, 115, 22, 0.1)", px: 2.5, py: 1, borderRadius: 2, border: "1px solid rgba(249, 115, 22, 0.2)" }}>
-            <span style={{ color: "#f97316", fontWeight: 700 }}>12,345</span>
-            <Typography variant="caption" sx={{ color: "text.secondary", fontWeight: 700, textTransform: "uppercase" }}>Leetcoins</Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => navigate("/inventory")}
+              sx={{ borderRadius: 2, fontWeight: 700, borderColor: "rgba(249, 115, 22, 0.5)" }}
+            >
+              Equip in Inventory
+            </Button>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, bgcolor: "rgba(249, 115, 22, 0.1)", px: 2.5, py: 1, borderRadius: 2, border: "1px solid rgba(249, 115, 22, 0.2)" }}>
+              <span style={{ color: "#f97316", fontWeight: 700 }}>12,345</span>
+              <Typography variant="caption" sx={{ color: "text.secondary", fontWeight: 700, textTransform: "uppercase" }}>Leetcoins</Typography>
+            </Box>
           </Box>
         </Box>
 

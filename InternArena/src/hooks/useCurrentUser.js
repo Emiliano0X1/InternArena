@@ -55,16 +55,31 @@ export const useCurrentUser = () => {
 	});
 
 	// Safe edge-case defaults as requested
+	let equippedCosmetics = {};
+	try {
+		const stored = localStorage.getItem("internarena_equipped_cosmetics");
+		if (stored) {
+			equippedCosmetics = JSON.parse(stored);
+		}
+	} catch (e) {
+		console.warn("Could not parse cosmetics in useCurrentUser:", e);
+	}
+
 	const profile = {
 		username:
 			query.data?.username ||
 			session?.user?.user_metadata?.username ||
 			"User Day One",
 		profileImg:
+			equippedCosmetics.avatarUrl ||
 			query.data?.profileImg ||
 			query.data?.avatar_url ||
 			session?.user?.user_metadata?.avatar_url ||
 			null,
+		bannerUrl: equippedCosmetics.bannerUrl || null,
+		equippedTag: equippedCosmetics.tagText || null,
+		equippedTagColor: equippedCosmetics.tagColor || null,
+		equippedBadgeIds: equippedCosmetics.badgeIds || [],
 		leetcoins:
 			Number(query.data?.userLeetcoins ?? query.data?.leetcoins) || 0,
 		matchWins:

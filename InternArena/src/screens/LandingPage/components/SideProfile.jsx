@@ -1,13 +1,16 @@
 import profilebanner from "../../../assets/profilebanner.png";
 import joeswag from "../../../assets/joeswag.png";
 import leetcode from "../../../assets/leetcode.png";
+import { useNavigate } from "react-router-dom";
 import { LiaMedalSolid } from "react-icons/lia";
 import { LuCoins } from "react-icons/lu";
+import { FaPaintBrush } from "react-icons/fa";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "motion/react";
 import useCurrentUser from "../../../hooks/useCurrentUser";
 
 function SideProfile() {
+	const navigate = useNavigate();
 	const { profile, isAuthenticated, isLoading } = useCurrentUser();
 
 	const displayAvatar = profile.profileImg || joeswag;
@@ -24,7 +27,7 @@ function SideProfile() {
 		>
 			<div className="relative h-28 w-full overflow-hidden">
 				<img
-					src={profilebanner}
+					src={profile.bannerUrl || profilebanner}
 					alt="Profile Banner"
 					className="w-full h-full object-cover brightness-75"
 				/>
@@ -32,14 +35,18 @@ function SideProfile() {
 
 			<div className="flex flex-col items-center px-6 pb-6">
 				{/* Avatar with fallback and online indicator */}
-				<div className="relative -mt-14 mb-3">
+				<div 
+					className="relative -mt-14 mb-3 cursor-pointer group"
+					onClick={() => navigate("/profile")}
+					title="View Public Profile"
+				>
 					<img
 						src={displayAvatar}
 						alt="Profile Picture"
 						onError={(e) => {
 							e.currentTarget.src = joeswag;
 						}}
-						className="w-24 h-24 rounded-full border-4 border-[#383434] object-cover shadow-lg bg-[#282424]"
+						className="w-24 h-24 rounded-full border-4 border-[#383434] object-cover shadow-lg bg-[#282424] group-hover:border-orange-500 transition-colors"
 					/>
 					<div
 						className={`absolute bottom-1.5 right-1.5 w-4 h-4 rounded-full border-2 border-[#383434] ${
@@ -50,12 +57,28 @@ function SideProfile() {
 				</div>
 
 				{/* User Identification */}
-				<h3 className="text-xl font-bold text-gray-100 truncate max-w-full text-center">
+				<h3 
+					onClick={() => navigate("/profile")}
+					className="text-xl font-bold text-gray-100 truncate max-w-full text-center cursor-pointer hover:text-orange-400 transition-colors"
+				>
 					{isLoading ? "Loading..." : displayUsername}
 				</h3>
-				<p className="text-xs text-neutral-400 mb-6 font-medium">
-					{isAuthenticated ? "Competitive Coder" : "Guest Coder"}
-				</p>
+				{profile.equippedTag ? (
+					<span
+						className="text-xs font-semibold px-2.5 py-0.5 rounded-full border mb-5 inline-block"
+						style={{
+							backgroundColor: `${profile.equippedTagColor || "#f97316"}18`,
+							color: profile.equippedTagColor || "#f97316",
+							borderColor: `${profile.equippedTagColor || "#f97316"}40`,
+						}}
+					>
+						{profile.equippedTag}
+					</span>
+				) : (
+					<p className="text-xs text-neutral-400 mb-6 font-medium">
+						{isAuthenticated ? "Competitive Coder" : "Guest Coder"}
+					</p>
+				)}
 
 				{/* Stats Panel */}
 				<div className="w-full space-y-3.5">
@@ -99,6 +122,14 @@ function SideProfile() {
 						</span>
 					</div>
 				</div>
+
+				<button
+					onClick={() => navigate("/inventory")}
+					className="w-full mt-4 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/30 text-xs font-bold transition-all shadow-sm cursor-pointer"
+				>
+					<FaPaintBrush className="text-xs" />
+					Customize Profile / Inventory
+				</button>
 			</div>
 		</motion.div>
 	);

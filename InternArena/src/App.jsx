@@ -7,6 +7,8 @@ import MatchPage from "./screens/MatchPage/MatchPage";
 import StoreView from "./screens/Store/Store";
 import JoinLobby from "./screens/JoinLobby/JoinLobby";
 import GuestWaitingRoom from "./screens/GuestWaitingRoom/GuestWaitingRoom";
+import Inventory from "./screens/Inventory/Inventory";
+import PublicProfile from "./screens/PublicProfile/PublicProfile";
 import { PartyProvider, useParty } from "./context/PartyContext";
 import { AuthProvider } from "./context/AuthContext";
 import ErrorDialog from "./components/ErrorDialog";
@@ -40,6 +42,9 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/matchpage" element={<MatchPage />} />
                     <Route path="/store" element={<StoreView />} />
+                    <Route path="/inventory" element={<Inventory />} />
+                    <Route path="/profile/:id" element={<PublicProfile />} />
+                    <Route path="/profile" element={<PublicProfile />} />
                     <Route path="/join" element={<JoinLobby />} />
                     <Route path="/guest-room" element={<GuestWaitingRoom />} />
                     <Route path="/waiting-room" element={<GuestWaitingRoom />} />
