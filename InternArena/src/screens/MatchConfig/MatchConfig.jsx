@@ -28,6 +28,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 import { useParty } from "../../context/PartyContext";
 import { useCreateMatch } from "../../hooks/useCreateMatch";
+import ErrorDialog from "../../components/ErrorDialog";
 
 function MatchConfig() {
     const navigate = useNavigate();
@@ -61,10 +62,16 @@ function MatchConfig() {
     const [topicSearch, setTopicSearch] = useState("");
 
     const [toast, setToast] = useState({ open: false, severity: "success", message: "" });
+    const [matchErrorDialog, setMatchErrorDialog] = useState({ open: false, message: "" });
 
     const createMatchMutation = useCreateMatch(
-        () => setToast({ open: true, severity: "success", message: "Match configured and started successfully!" }),
-        (err) => setToast({ open: true, severity: "error", message: err?.message || "Failed to configure match." })
+        () => {
+        setToast({ open: true, severity: "success", message: "Match configured and started successfully!" });
+        setTimeout(() => navigate("/matchpage"), 1500);
+        },
+        (err) => {
+        setMatchErrorDialog({ open: true, message: err?.message || "Failed to configure match. Please try again." });
+        }
     );
 
     // Popups state
@@ -181,7 +188,7 @@ function MatchConfig() {
 
         const payload = {
             party_id: Number(partyId) || currentParty?.party_id || 1,
-            difficulty: difficulty.toLowerCase(), // "easy" | "medium" | "hard"
+            difficulty: difficulty.toUpperCase(), // "easy" | "medium" | "hard"
             partyPrize: prize,
             endTime: `${matchEndDate}T23:59:59`,
         };
@@ -641,7 +648,16 @@ function MatchConfig() {
                 >
                     {toast.message}
                 </Alert>
-            </Snackbar>
+                       </Snackbar>
+
+            <ErrorDialog
+                open={matchErrorDialog.open}
+                title="Match Launch Failed"
+                message={matchErrorDialog.message}
+                status="error"
+                onClose={() => setMatchErrorDialog({ open: false, message: "" })}
+            />
+
         </Box>
     );
 }
