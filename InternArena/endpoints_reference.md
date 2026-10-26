@@ -182,11 +182,12 @@ Controlador: `PlayerController.java` | **Base Path**: `/api/v1/players`
 - **Ruta**: `/api/v1/players/{id}`
 - **Body JSON** (`PlayerDTO`): `{ "playerUsername": "..." }`
 
+
 ### 3.6. Eliminar jugador
 - **Método**: `DELETE`
 - **Ruta**: `/api/v1/players/{id}`
 
----
+---z
 
 ## 4. 🧩 Problemas de LeetCode (`Problem`)
 Controlador: `ProblemController.java` | **Base Path**: `/api/v1/problem`

@@ -2,10 +2,9 @@ import joeswag from '../../../assets/joeswag.png'
 import { BsTrash3 } from "react-icons/bs";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "motion/react";
-
 import PropTypes from "prop-types";
 
-function Player({ id, name, onDelete }) {
+function Player({ id, name, onDelete, isHost }) {
     return(
         <motion.div 
             layout
@@ -24,22 +23,25 @@ function Player({ id, name, onDelete }) {
                     />
                     <p className='font-medium text-neutral-200 truncate'>{name}</p>
                 </div>
-                <button
-                    onClick={() => onDelete(id)}
-                    className="shrink-0 p-2 rounded-lg hover:bg-neutral-800 transition-colors text-neutral-400 hover:text-red-400 cursor-pointer"
-                    aria-label="Remove player"
-                >
-                    <BsTrash3 className="h-4 w-4"/>
-                </button>
+                {!isHost && (
+                    <button
+                        onClick={() => onDelete(id, name)}
+                        className="shrink-0 p-2 rounded-lg hover:bg-neutral-800 transition-colors text-neutral-400 hover:text-red-400 cursor-pointer"
+                        aria-label="Remove player"
+                    >
+                        <BsTrash3 className="h-4 w-4"/>
+                    </button>
+                )}
             </div>
         </motion.div>
     )
 }
 
 Player.propTypes = {
-    id: PropTypes.number.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     name: PropTypes.string.isRequired,
     onDelete: PropTypes.func.isRequired,
+    isHost: PropTypes.bool,
 };
 
-export default Player;
+export default Player;
