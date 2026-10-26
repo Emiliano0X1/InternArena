@@ -44,10 +44,10 @@ function Players({ initialPlayers = [], onPlayerRemoved }) {
     const handleConfirmKick = async () => {
         const { playerId } = confirmDialog;
         setConfirmDialog({ open: false, playerId: null, playerName: "" });
-        setPlayers((prev) => prev.filter((p) => p.id !== playerId));
         try {
-            if (playerId && typeof playerId === "number" && playerId > 0) {
+            if (playerId && Number(playerId) > 0) {
                 await deletePlayer(playerId);
+                setPlayers((prev) => prev.filter((p) => p.id !== playerId));
                 onPlayerRemoved?.(playerId);
             }
         } catch (err) {
@@ -92,13 +92,13 @@ function Players({ initialPlayers = [], onPlayerRemoved }) {
                     }}
                 >
                     <AnimatePresence initial={false}>
-                        {players.map((player) => (
+                        {players.map((player, index) => (
                             <Player
                                 key={player.id}
                                 id={player.id}
                                 name={player.name}
                                 onDelete={handleDeleteClick}
-                                isHost={player.name === DEFAULT_HOST_NAME}
+                                isHost={index === 0 || player.name === DEFAULT_HOST_NAME}
                             />
                         ))}
                     </AnimatePresence>
@@ -113,7 +113,6 @@ function Players({ initialPlayers = [], onPlayerRemoved }) {
                 </Box>
             </Paper>
 
-            {/* Confirmation Dialog */}
             <Dialog open={confirmDialog.open} onClose={handleCancelKick}>
                 <DialogTitle>Remove Player</DialogTitle>
                 <DialogContent>
@@ -131,7 +130,6 @@ function Players({ initialPlayers = [], onPlayerRemoved }) {
                 </DialogActions>
             </Dialog>
 
-            {/* Error Dialog */}
             <ErrorDialog
                 open={kickError.open}
                 title="Failed to Remove Player"
