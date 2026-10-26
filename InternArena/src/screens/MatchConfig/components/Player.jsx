@@ -1,5 +1,6 @@
 import joeswag from '../../../assets/joeswag.png'
 import { BsTrash3 } from "react-icons/bs";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "motion/react";
 import PropTypes from "prop-types";
 
@@ -37,7 +38,7 @@ function Player({ id, name, onDelete, isHost }) {
 }
 
 Player.propTypes = {
-    id: PropTypes.number.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     name: PropTypes.string.isRequired,
     onDelete: PropTypes.func.isRequired,
     isHost: PropTypes.bool,
